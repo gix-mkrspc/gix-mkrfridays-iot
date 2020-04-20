@@ -1,0 +1,48 @@
+esphome:
+  name: servo_test
+  platform: ESP8266
+  board: nodemcuv2
+  
+web_server:
+  port: 80
+
+wifi:
+  ssid: !secret ssid
+  password: !secret ssid_pass
+
+  ap:
+    ssid: !secret ap_ssid
+    password: !secret ap_pass
+
+captive_portal:
+
+switch:
+  - platform: gpio
+    pin: D4
+    id: 'servo_switch'
+    name: "Servo Control"
+    icon: "mdi:restart"
+    on_turn_on:
+      - logger.log: "Switch Turned On!"
+      - servo.write:
+          id: my_servo
+          level: 100.0%
+    on_turn_off:
+      - logger.log: "Switch Turned Off!"
+      - servo.write:
+          id: my_servo
+          level: -100.0%
+servo:
+  - id: my_servo
+    output: pwm_output
+
+output:
+  - platform: esp8266_pwm
+    id: pwm_output
+    pin: D4
+    frequency: 50 Hz
+
+logger:
+
+ota:
+  password: !secret ota_pass
