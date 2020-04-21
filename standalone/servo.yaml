@@ -7,9 +7,6 @@ web_server:
   port: 80
 
 wifi:
-  ssid: !secret ssid
-  password: !secret ssid_pass
-
   ap:
     ssid: !secret ap_ssid
     password: !secret ap_pass
