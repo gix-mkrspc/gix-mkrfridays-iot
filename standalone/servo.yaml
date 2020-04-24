@@ -22,20 +22,20 @@ switch:
     on_turn_on:
       - logger.log: "Switch Turned On!"
       - servo.write:
-            id: my_servo
-            level: -50.0%
+          id: my_servo
+          level: -50.0%
       - delay: 0.5s
       - servo.write:
-            id: my_servo
-            level: 50.0%
+          id: my_servo
+          level: 50.0%
       - delay: 0.5s
       - servo.write:
-            id: my_servo
-            level: -50.0%
+          id: my_servo
+          level: -50.0%
       - delay: 0.5s
       - servo.write:
-            id: my_servo
-            level: 50.0%
+          id: my_servo
+          level: 50.0%
       - delay: 0.5s
     on_turn_off:
       - logger.log: "Switch Turned Off!"
