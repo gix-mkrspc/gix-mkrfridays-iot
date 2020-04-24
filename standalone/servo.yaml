@@ -37,6 +37,7 @@ switch:
           id: my_servo
           level: 50.0%
       - delay: 0.5s
+      - switch.turn_off: servo_switch
     on_turn_off:
       - logger.log: "Switch Turned Off!"
       - servo.write:
