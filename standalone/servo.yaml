@@ -21,14 +21,28 @@ switch:
     icon: "mdi:restart"
     on_turn_on:
       - logger.log: "Switch Turned On!"
+      - logger.log: "Switch Turned On!"
       - servo.write:
-          id: my_servo
-          level: 100.0%
+            id: my_servo
+            level: -50.0%
+      - delay: 0.5s
+      - servo.write:
+            id: my_servo
+            level: 50.0%
+      - delay: 0.5s
+      - servo.write:
+            id: my_servo
+            level: -50.0%
+      - delay: 0.5s
+      - servo.write:
+            id: my_servo
+            level: 50.0%
+      - delay: 0.5s
     on_turn_off:
       - logger.log: "Switch Turned Off!"
       - servo.write:
           id: my_servo
-          level: -100.0%
+          level: 0.0%
 servo:
   - id: my_servo
     output: pwm_output
