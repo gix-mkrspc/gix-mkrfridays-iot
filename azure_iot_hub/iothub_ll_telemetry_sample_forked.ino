@@ -11,6 +11,7 @@
 // ONLY change platform.text to:
 // build.extra_flags=-DESP8266 -DDONT_USE_UPLOADTOBLOB -DUSE_BALTIMORE_CERT
 // Follow other steps as written
+// ***IMPORTANT***: Use a baud rate of 115200 for your serial monitor
 
 
 #include <AzureIoTHub.h>
