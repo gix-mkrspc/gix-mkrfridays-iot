@@ -21,7 +21,6 @@ switch:
     icon: "mdi:restart"
     on_turn_on:
       - logger.log: "Switch Turned On!"
-      - logger.log: "Switch Turned On!"
       - servo.write:
             id: my_servo
             level: -50.0%
