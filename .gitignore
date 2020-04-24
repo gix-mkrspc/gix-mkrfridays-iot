@@ -2,3 +2,5 @@
 secrets.yaml
 esphome/
 servo_test/
+**/iot_configs.h
+**/.esphome
