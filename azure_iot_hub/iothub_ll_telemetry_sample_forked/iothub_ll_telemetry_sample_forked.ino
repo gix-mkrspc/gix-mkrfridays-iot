@@ -69,6 +69,10 @@ const char* telemetry_msg = "test_message";
 
 IOTHUB_DEVICE_CLIENT_LL_HANDLE device_ll_handle;
 
+#include <Servo.h>
+
+Servo servo;
+
 static int callbackCounter;
 int receiveContext = 0;
 
@@ -103,9 +107,24 @@ static IOTHUBMESSAGE_DISPOSITION_RESULT receive_message_callback(IOTHUB_MESSAGE_
         {
             g_continueRunning = false;
         }
+        if ((size == (strlen("servo") * sizeof(char)) && memcmp(buffer, "servo", size) == 0))
+        {
+                /* servo move on message received */ 
+        LogInfo("SERVO ACTIVATED");
+        // *** SERVO ***
+        servo.attach(2); //D4
+        LogInfo("Servo setup");
+        for (int i = 0; i < 3; i++) {
+            servo.write(0);
+            delay(1000);
+            servo.write(180);
+            delay(1000);
+        }
+        }
     }
 
     /* Some device specific action code goes here... */
+
     (*counter)++;
     return IOTHUBMESSAGE_ACCEPTED;
 }
@@ -145,7 +164,6 @@ void setup() {
     int result = 0;
 
     sample_init(ssid, pass);
-
     // Create the iothub handle here
     device_ll_handle = IoTHubDeviceClient_LL_CreateFromConnectionString(connectionString, protocol);
     // Used to initialize IoTHub SDK subsystem
@@ -214,11 +232,11 @@ void setup() {
 
                 messages_sent++;
             }
-            else if (g_message_count_send_confirmations >= MESSAGE_COUNT)
-            {
-                // After all messages are all received stop running
-                g_continueRunning = false;
-            }
+            // else if (g_message_count_send_confirmations >= MESSAGE_COUNT)
+            // {
+            //     // After all messages are all received stop running
+            //     g_continueRunning = false;
+            // }
 
             IoTHubDeviceClient_LL_DoWork(device_ll_handle);
             ThreadAPI_Sleep(3);
