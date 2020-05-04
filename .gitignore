@@ -15,3 +15,4 @@ esphome/
 servo_test/
 **/iot_configs.h
 **/.esphome
+.vscode/settings.json
