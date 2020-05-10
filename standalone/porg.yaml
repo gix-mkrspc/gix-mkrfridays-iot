@@ -1,0 +1,32 @@
+esphome:
+  name: porg
+  platform: ESP8266
+  board: nodemcuv2
+  
+web_server:
+  port: 80
+
+wifi:
+  ap:
+    ssid: !secret ap_ssid
+    password: !secret ap_pass
+
+captive_portal:
+
+switch:
+  - platform: gpio
+    pin: D1
+    id: porg_switch
+    name: "Switch Control"
+    icon: "mdi:electric-switch"
+    on_turn_on:
+      - logger.log: "Switch Turned On!"
+      - delay: 1s
+      - switch.turn_off: porg_switch
+    on_turn_off:
+      - logger.log: "Switch Turned Off!"
+
+logger:
+
+ota:
+  password: !secret ota_pass
