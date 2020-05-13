@@ -1,4 +1,3 @@
-# GIX IoT - Local and (soon) Remote Servo Control for the Cohort
 # Local control (via ESPHome)
 ## Components
 - NodeMCU WiFi development board *1
@@ -25,14 +24,14 @@
 
 We've already flashed the basic program, all you need to do is follow the below steps and connect it to your WiFi.
 
-The process will be...
-- Connect to NodeMCU WiFi
-- Tell it your own WiFi name and password
-- Let it connect to your WiFi
-- Connect back to your own WiFi
-- use your own WiFi to control it
+## The Overall Process
+1. Connect to NodeMCU WiFi
+2. Tell it your own WiFi name and password
+3. Let it connect to your WiFi
+4. Connect back to your own WiFi
+5. Use your own WiFi to control it
 
-### Detail Steps
+### Detailed Steps
 1. Plug in the micro USB cable (just for providing power, don't need to connect to a computer)
 2. Use your device (PC/phone) and connect to the WiFi netowrk: "gix_iot"
 3. Password: "gixmkrspc"
