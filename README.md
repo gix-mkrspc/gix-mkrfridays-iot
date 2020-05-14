@@ -37,7 +37,7 @@ We've already flashed the basic program, all you need to do is follow the below 
 3. Password: "gixmkrspc"
 4. Wait for the webpage to popup, you will see this:
 ![ap_screenshot](./assets/ap_screenshot.png)
-(If the page didn't show up after you connected to the WiFi, try to go to http://192.168.4.1/)
+> (If the page didn't show up after you connected to the WiFi, try to go to http://192.168.4.1/)
 
 5. Enter your **own WiFi's** SSID(name) & password,
  you can use your home WiFi, phone hotspot, etc.
