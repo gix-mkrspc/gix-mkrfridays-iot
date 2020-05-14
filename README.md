@@ -6,7 +6,7 @@ ESPHome is the software and firmware flasher we’ll be using; it’s a “syste
 # Local Control (via ESPHome)
 
 ## Upon Completion
-By completing this project you will have a device which can wave 👋 when it’s virtual button is pressed via its website.
+By completing this project you will have a device which can wave 👋 when its virtual button is pressed via its website.
 
 ## Components
 - NodeMCU WiFi development board *1
