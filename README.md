@@ -39,6 +39,7 @@ We've already flashed the basic program, all you need to do is follow the below 
 ![ap_screenshot](./assets/ap_screenshot.png)
   
 (If the page didn't show up after you connected to the WiFi, try to go to http://192.168.4.1/)
+
 5. Enter your **own WiFi's** SSID(name) & password,
  you can use your home WiFi, phone hotspot, etc.
 6. Wait a few seconds after you see the success message. Press RST button on the NodeMCU and let the NodeMCU connect to your WiFi
@@ -48,6 +49,7 @@ We've already flashed the basic program, all you need to do is follow the below 
 > If you can't see this page, try refreshing the page several times in 1-2 minutes. After 1-2 minutes, if you still can't see this page. Go back to step **2.** and connect to "gix_iot" again. This time you might get a WiFi list in your popup page, connect to the WiFi you want.
 > 
 > An iPhone or Android device may change the WiFi network back to your home network, since the NodeMCU doesn't have an Internet connection. You may need to ensure that "Auto Join" is turned off for your other WiFi (iPhone) or forget the other network (Android); this step is only to get the NodeMCU onto your home network and then you can re-join and/or turn on "Auto Join" for your home WiFi again.
+
 9. Click Toggle, you can move the servo now 👋!
   
 ### Congratulations! 👏👏👏
