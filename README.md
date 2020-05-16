@@ -68,3 +68,28 @@ Now that the WiFi connection is configured, your NodeMCU will automatically conn
 
 ## Extensibility
 As the microcontroller is easily reprogrammable, the hand wave can be triggered, or its action changed by possibilities only limited by your imagination! For instance, you can easily hook ESPHome into an automation platform called Home Assistant, which will allow you to wave the hand for all sorts of triggers; for instance, if someone opens your door, you can use the ESPHome to wave. You can also change the hand itself to become an indicator; since we’re using a servo, you can control the state, or how much, the servo rotates. You can make the hand move to different positions depending on whether it’s cloudy or sunny and make the servo rotate to that predefined position when the weather changes.
+
+## Custom Development Setup
+In order to customize the microcontroller, you have to re-flash the NodeMCU again. Here are the steps that you need to do:
+Windows:
+1. Set up a new virtual environment
+- make sure you have python installed (open Command Prompt and type in "python")
+- locate the directory you want the virtual environment to be installed in
+- in Command Prompt, enter "python -m venv venv"
+- then ".\venv\Scripts\Activate.bat"
+- IF using Power Shell, use ".\venv\Scripts\Activate.ps1"
+- ensure that servo is not connected to the NodeMCU before next step
+2. Installing esphome
+- enter "install esphome"
+3. Download zip and extract
+- in the standalone folder, right-click and create new text document.
+- copy and paste these into it.
+    ap_ssid: "Servo Test Fallback Hotspot"
+    ap_pass: "test12341234"
+    ota_pass: "test12341234"
+- rename file name as "secrets.yaml"
+4. Run!
+- in Command Prompt, "cd *path to the standalone folder*"
+- then "esphome servo.yaml run"
+- it should start installing 
+- DONE!
