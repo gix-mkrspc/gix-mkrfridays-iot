@@ -2,7 +2,7 @@
 <script async defer src="https://buttons.github.io/buttons.js"></script>
 <div style="text-align:center">
     <!-- star -->
-    <a class="github-button" href="https://github.com/codycodes/gix-mkrfridays-iot/" data-color-scheme="no-preference: light; light: light; dark: light;" data-size="large" aria-label="Star codycodes/gix-mkrfridays-iot on GitHub">Star</a>
+    <a class="github-button" href="https://github.com/codycodes/gix-mkrfridays-iot/" data-icon="octicon-star" data-color-scheme="no-preference: light; light: light; dark: light;" data-size="large" aria-label="Star codycodes/gix-mkrfridays-iot on GitHub">Star</a>
     <!-- download -->
     <a class="github-button" href="https://github.com/codycodes/gix-mkrfridays-iot/archive/master.zip" data-icon="octicon-cloud-download" data-size="large" aria-label="Download codycodes/gix-mkrfridays-iot on GitHub">Download</a>
     <!-- issue -->
