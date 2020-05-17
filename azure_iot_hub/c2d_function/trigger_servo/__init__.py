@@ -7,8 +7,8 @@ from azure.iot.hub import IoTHubRegistryManager
 
 # Note that Azure Key Vault doesn't support underscores and some other special chars
 # We substitute with a hyphen for underscore
-CONNECTION_STRING = "HostName=gix-mkrfridays-uJlCzaoO.azure-devices.net;SharedAccessKeyName=service;SharedAccessKey=dvbiNFQs867Yu01PK6X/kI/9/GH8M+F3/8i0YAF+kqA="
-DEVICE_ID = "MyPythonDevice"
+CONNECTION_STRING = "{IoTHubConnectionString}"
+DEVICE_ID = "{deviceId}"
 
 DEVICE_MESSAGE = "servo"
 MESSAGE_COUNT = 1
