@@ -1,3 +1,8 @@
+<!-- Place this tag where you want the button to render. -->
+<a class="github-button" href="https://github.com/ntkme/github-buttons" data-color-scheme="no-preference: light; light: light; dark: light;" data-size="large" aria-label="Star ntkme/github-buttons on GitHub">Star</a>
+<!-- Place this tag where you want the button to render. -->
+<a class="github-button" href="https://github.com/ntkme/github-buttons/issues" data-color-scheme="no-preference: light; light: light; dark: light;" data-size="large" aria-label="Issue ntkme/github-buttons on GitHub">Issue</a>
+
 ## About
 The NodeMCU is an open-source firmware and development kit which allows us to use a low-cost ESP8266 WiFi MCU to provide “the best platform for IOT application development at the lowest cost” [NodeMCU homepage](https://www.nodemcu.com/index_en.html).  
 
