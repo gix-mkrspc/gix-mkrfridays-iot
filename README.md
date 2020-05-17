@@ -70,8 +70,9 @@ Now that the WiFi connection is configured, your NodeMCU will automatically conn
 As the microcontroller is easily reprogrammable, the hand wave can be triggered, or its action changed by possibilities only limited by your imagination! For instance, you can easily hook ESPHome into an automation platform called Home Assistant, which will allow you to wave the hand for all sorts of triggers; for instance, if someone opens your door, you can use the ESPHome to wave. You can also change the hand itself to become an indicator; since we’re using a servo, you can control the state, or how much, the servo rotates. You can make the hand move to different positions depending on whether it’s cloudy or sunny and make the servo rotate to that predefined position when the weather changes.
 
 ## Custom Development Setup
-In order to customize the microcontroller, you have to re-flash the NodeMCU again. Here are the steps that you need to do:
-Windows:
+In order to customize the microcontroller, you have to re-flash the NodeMCU again. Below are the steps that you need to do.
+
+For Windows:
 1. Set up a new virtual environment
 - make sure you have python installed (open Command Prompt and type in "python")
 - locate the directory you want the virtual environment to be installed in
