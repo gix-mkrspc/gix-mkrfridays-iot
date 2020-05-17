@@ -109,17 +109,22 @@ static IOTHUBMESSAGE_DISPOSITION_RESULT receive_message_callback(IOTHUB_MESSAGE_
         }
         if ((size == (strlen("servo") * sizeof(char)) && memcmp(buffer, "servo", size) == 0))
         {
-                /* servo move on message received */ 
-        LogInfo("SERVO ACTIVATED");
+        /* servo move on message received */ 
+        // LogInfo("SERVO ACTIVATED");
         // *** SERVO ***
-        servo.attach(2); //D4
-        LogInfo("Servo setup");
-        for (int i = 0; i < 3; i++) {
-            servo.write(0);
-            delay(1000);
-            servo.write(180);
-            delay(1000);
-        }
+        // servo.attach(2); //D4
+        // LogInfo("Servo setup");
+        // for (int i = 0; i < 2; i++) {
+        //     servo.write(0);
+        //     delay(1000);
+        //     servo.write(180);
+        //     delay(1000);
+        // }
+        // TODO: add Porg switch
+        LogInfo("PORG ACTIVATED");
+        digitalWrite(5, HIGH); // sets the digital pin 13 on
+        delay(1000); 
+        digitalWrite(5, LOW); // sets the digital pin 13 on
         }
     }
 
@@ -161,6 +166,9 @@ static void connection_status_callback(IOTHUB_CLIENT_CONNECTION_STATUS result, I
 }
 
 void setup() {
+    // Porg switch:
+    pinMode(5, OUTPUT); // D1
+
     int result = 0;
 
     sample_init(ssid, pass);

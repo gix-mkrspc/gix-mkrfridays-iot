@@ -1,7 +1,13 @@
-<!-- Place this tag where you want the button to render. -->
-<a class="github-button" href="https://github.com/ntkme/github-buttons" data-color-scheme="no-preference: light; light: light; dark: light;" data-size="large" aria-label="Star ntkme/github-buttons on GitHub">Star</a>
-<!-- Place this tag where you want the button to render. -->
-<a class="github-button" href="https://github.com/ntkme/github-buttons/issues" data-color-scheme="no-preference: light; light: light; dark: light;" data-size="large" aria-label="Issue ntkme/github-buttons on GitHub">Issue</a>
+<!-- Place this tag in your head or just before your close body tag. -->
+<script async defer src="https://buttons.github.io/buttons.js"></script>
+<div style="text-align:center">
+    <!-- star -->
+    <a class="github-button" href="https://github.com/codycodes/gix-mkrfridays-iot/" data-color-scheme="no-preference: light; light: light; dark: light;" data-size="large" aria-label="Star codycodes/gix-mkrfridays-iot on GitHub">Star</a>
+    <!-- download -->
+    <a class="github-button" href="https://github.com/codycodes/gix-mkrfridays-iot/archive/master.zip" data-icon="octicon-cloud-download" aria-label="Download codycodes/gix-mkrfridays-iot on GitHub">Download</a>
+    <!-- issue -->
+    <a class="github-button" href="https://github.com/codycodes/gix-mkrfridays-iot/issues" data-color-scheme="no-preference: light; light: light; dark: light;" data-size="large" aria-label="Issue codycodes/gix-mkrfridays-iot on GitHub">Issue</a>
+</div>
 
 ## About
 The NodeMCU is an open-source firmware and development kit which allows us to use a low-cost ESP8266 WiFi MCU to provide “the best platform for IOT application development at the lowest cost” [NodeMCU homepage](https://www.nodemcu.com/index_en.html).  
