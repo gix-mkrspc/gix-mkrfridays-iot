@@ -2,9 +2,6 @@ import logging
 import azure.functions as func
 from azure.iot.hub import IoTHubRegistryManager
 
-# CONNECTION_STRING = "HostName=gix-mkrfridays-uJlCzaoO.azure-devices.net;SharedAccessKeyName=service;SharedAccessKey=dvbiNFQs867Yu01PK6X/kI/9/GH8M+F3/8i0YAF+kqA="
-# DEVICE_ID = "MyPythonDevice"
-
 # Note that Azure Key Vault doesn't support underscores and some other special chars
 # We substitute with a hyphen for underscore
 CONNECTION_STRING = "{IoTHubConnectionString}"
