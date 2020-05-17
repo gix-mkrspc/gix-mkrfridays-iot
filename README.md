@@ -72,25 +72,36 @@ As the microcontroller is easily reprogrammable, the hand wave can be triggered,
 ## Custom Development Setup
 In order to customize the microcontroller, you have to re-flash the NodeMCU again. Below are the steps that you need to do.
 
-For Windows:
-1. Set up a new virtual environment
-- make sure you have python installed (open Command Prompt and type in "python")
+### For Windows:
+1. Set up a new virtual environment in Python
+- make sure you have python installed (open Command Prompt and type in `python`; if it opens python shell then you've confirmed Python is accessible in your Path; otherwise reinstall Python and ensure you check the box to add it to your system's path environment variable)
 - locate the directory you want the virtual environment to be installed in
-- in Command Prompt, enter "python -m venv venv"
-- then ".\venv\Scripts\Activate.bat"
-- IF using Power Shell, use ".\venv\Scripts\Activate.ps1"
-- ensure that servo is not connected to the NodeMCU before next step
+- in the Windows Command Prompt, enter "python -m venv venv"
+  - This command invokes the python module *venv* (first parameter) and creates it inside a directory named *venv* (second parameter)
+- then run `.\venv\Scripts\Activate.bat`
+  - This command activates the virtual environment; you should now see your command prompt prepended with **(venv)**
+- IF using Power Shell (instead of command prompt), use `.\venv\Scripts\Activate.ps1`
+  - This command activates the virtual environment; you should now see your command prompt prepended with **(venv)**
+- ⚠️ensure that servo is not connected to the NodeMCU before next step
 2. Installing esphome
-- enter "install esphome"
-3. Download zip and extract
+- enter `pip install esphome`
+1. Download or `git clone` the [repo](https://github.com/codycodes/gix-mkrfridays-iot/archive/master.zip) and extract it anywhere (best is to put it in same folder as your venv)
 - in the standalone folder, right-click and create new text document.
 - copy and paste these into it.
     ap_ssid: "Servo Test Fallback Hotspot"
     ap_pass: "test12341234"
     ota_pass: "test12341234"
-- rename file name as "secrets.yaml"
+- rename file name to "secrets.yaml" (ensure the file extension is `.yaml` and **not** `.txt`)
 4. Run!
-- in Command Prompt, "cd *path to the standalone folder*"
-- then "esphome servo.yaml run"
+- in Command Prompt, type and run `cd *path to the standalone folder*`
+- then `esphome servo.yaml run`
 - it should start installing 
 - DONE!
+5. You can now develop your own custom esphome components! Get started on [esphome.io](http://esphome.io)
+### For macOS/Linux
+1. Ensure you have python3 [installed](https://docs.python-guide.org/starting/install3/osx/)
+2. Open your favorite terminal app
+3. run `./install.sh`
+4. run `./run.sh`
+    - You can replace the `servo.yaml` file here with your own configuration!
+5. You can now develop your own custom esphome components! Get started on [esphome.io](http://esphome.io)
