@@ -3,8 +3,16 @@
 from azure.common.client_factory import get_client_from_cli_profile
 from azure.mgmt.resource import ResourceManagementClient
 
+import os
+import random
+import subprocess
+
 RESOURCE_GROUP_NAME = "iot-porg"
 RESOURCE_GROUP_LOCATION = "centralus"
+
+IOT_HUB_NAME = f"{RESOURCE_GROUP_NAME}-{random.randint(1,100000):05}"
+IOT_HUB_SKU = "F1" # free tier
+IOT_HUB_PARTITION_COUNT = "2" # free tier
 
 # Obtain the management object for resources, using the credentials from the CLI login.
 resource_client = get_client_from_cli_profile(ResourceManagementClient)
@@ -28,6 +36,19 @@ rg_result = resource_client.resource_groups.create_or_update(
 # https://docs.microsoft.com/azure/developer/python/azure-sdk-overview#inline-json-pattern-for-object-arguments.
 
 print(f"Provisioned resource group {rg_result.name} in the {rg_result.location} region")
+
+# install extension if not already installed
+
+# TODO: check if IoTHub exists already?
+print('Checking az cli iot-hub extension...')
+os.system('az extension add --name azure-iot')
+print('Creating iot hub')
+os.system(f"az iot hub create --name {IOT_HUB_NAME} "
+        f"--resource-group {RESOURCE_GROUP_NAME} --sku {IOT_HUB_SKU} --verbose "
+        f"--partition-count {IOT_HUB_PARTITION_COUNT}"
+        )
+# TODO: use subprocess
+# direct_output = subprocess.check_output('ls', shell=True) #could be anything here.
 
 # The return value is another ResourceGroup object with all the details of the
 # new group. In this case the call is synchronous: the resource group has been
