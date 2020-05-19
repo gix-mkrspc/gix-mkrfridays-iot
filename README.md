@@ -42,7 +42,7 @@ By completing this project you will have a device which can wave 👋 when its v
 ---
 ## Software Setup
 
-To make the process easier, you don't need to assemble everything while you setup the software. You can attach the servo and board after the sofeware is setup successfully.
+To make the process easier, you don't need to assemble everything while you set up the software. You just need to plug your servo to the NodeMCU. You can then attach them to the box after the software is setup successfully.
 
 *Prerequisites*
 - working WiFi, you know the SSID(name) & password
@@ -79,7 +79,7 @@ We've already flashed the basic program, all you need to do is follow the below 
 ### Congratulations! 👏👏👏
 Now that the WiFi connection is configured, your NodeMCU will automatically connect to your WiFi every time it boots up.
 
-10. You can put attach the servo and board on the enclosure after setup the software
+10. You can attach the servo and board to the enclosure
 <div style="text-align:center">
 <!-- make the following images centered -->
 <img src="./assets/finish1.jpg" height="400">
