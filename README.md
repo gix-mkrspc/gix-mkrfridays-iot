@@ -41,6 +41,9 @@ By completing this project you will have a device which can wave 👋 when its v
 
 ---
 ## Software Setup
+
+To make the process easier, you don't need to assemble everything while you setup the software. You can attach the servo and board after the sofeware is setup successfully.
+
 *Prerequisites*
 - working WiFi, you know the SSID(name) & password
 - computer or phone
