@@ -43,7 +43,7 @@ By completing this project you will have a device which can wave 👋 when its v
 ---
 ## Software Setup
 
-To make the process easier, you don't need to assemble everything while you set up the software. You just need to plug your servo to the NodeMCU. You can then attach them to the box after the software is setup successfully.
+To make the process easier, you don't need to assemble everything while you set up the software. **You just need to plug your servo to the NodeMCU.** After the software is setup successfully you can then attach them to the box.
 
 *Prerequisites*
 - working WiFi, you know the SSID(name) & password
