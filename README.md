@@ -28,7 +28,10 @@ By completing this project you will have a device which can wave 👋 when its v
 ---
 ## Hardware Setup
 1. Assemble the box
-> In progress
+<div style="text-align:center">
+<!-- make the following images centered -->
+<img src="./assets/assemble.gif">
+</div>
 2. Plug servo to NodeMCU ( Yellow-D4, Red-3.3v, Brown-GND )
 <div style="text-align:center">
 <!-- make the following images centered -->
@@ -72,6 +75,13 @@ We've already flashed the basic program, all you need to do is follow the below 
   
 ### Congratulations! 👏👏👏
 Now that the WiFi connection is configured, your NodeMCU will automatically connect to your WiFi every time it boots up.
+
+10. You can put attach the servo and board on the enclosure after setup the software
+<div style="text-align:center">
+<!-- make the following images centered -->
+<img src="./assets/finish1.jpg" height="400">
+<img src="./assets/finish2.jpg" height="400">
+</div>
 
 > If you want to connect to another WiFi, turn off or get away from the WiFi signal you previously connected to. Once the NodeMCU failed to connect to WiFi, it will start "ap mode" and you can reset it from step **2.**
 
