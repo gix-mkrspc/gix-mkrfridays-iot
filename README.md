@@ -28,7 +28,7 @@ By completing this project you will have a device which can wave 👋 when its v
 ---
 ## Hardware Setup
 1. Assemble the box
-Please follow the paired marks on the parts. The marks should be facing inside the box.
+> Please follow the marks on the parts, match each paired marks. The marks should be facing inside the box.
 <div style="text-align:center">
 <!-- make the following images centered -->
 <img src="./assets/assemble.gif">
@@ -85,7 +85,7 @@ Now that the WiFi connection is configured, your NodeMCU will automatically conn
 10. You can attach the servo and board to the enclosure
 <div style="text-align:center">
 <!-- make the following images centered -->
-<img src="./assets/finish2.jpg" height="300">
+<img src="./assets/finish0.jpg" height="300">
 <img src="./assets/finish1.jpg" height="300">
 <img src="./assets/finish2.jpg" height="300">
 </div>
