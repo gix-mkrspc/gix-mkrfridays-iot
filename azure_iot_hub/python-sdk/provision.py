@@ -10,10 +10,17 @@ import subprocess
 RESOURCE_GROUP_NAME = "iot-porg"
 RESOURCE_GROUP_LOCATION = "centralus"
 
-IOT_HUB_NAME = f"{RESOURCE_GROUP_NAME}-{random.randint(1,100000):05}"
+
+IOT_HUB_NAME = f"{RESOURCE_GROUP_NAME}-iothub"
+# TODO: This should be grabbing from a text file or other source so that we have
+# idempotency/consistent runs
+# IOT_HUB_NAME = f"{RESOURCE_GROUP_NAME}-{random.randint(1,100000):05}"
+
 IOT_HUB_SKU = "F1" # free tier
 IOT_HUB_PARTITION_COUNT = "2" # free tier
 
+IOT_HUB_NUM_DEVICES = 3
+IOT_HUB_DEVICE_PREFIX = "device"
 # Obtain the management object for resources, using the credentials from the CLI login.
 resource_client = get_client_from_cli_profile(ResourceManagementClient)
 
@@ -56,3 +63,15 @@ os.system(f"az iot hub create --name {IOT_HUB_NAME} "
 
 # Optional line to delete the resource group
 #resource_client.resource_groups.delete("PythonSDKExample-ResourceGroup-rg")
+
+# TODO: check that IOTHub exists before attempting to create a new one
+os.system(f"az iot hub create --name {IOT_HUB_NAME} "
+        f"--resource-group {RESOURCE_GROUP_NAME} --sku {IOT_HUB_SKU} --verbose "
+        f"--partition-count {IOT_HUB_PARTITION_COUNT}"
+        )
+
+for i in range(IOT_HUB_NUM_DEVICES):
+    device_name = f"{IOT_HUB_DEVICE_PREFIX}-{random.randint(1,100000):05}"
+    os.system(f"az iot hub device-identity create -n {IOT_HUB_NAME} "
+            f"-d {device_name}"
+            )
