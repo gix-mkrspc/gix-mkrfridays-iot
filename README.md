@@ -28,14 +28,14 @@ By completing this project you will have a device which can wave 👋 when its v
 ---
 ## Hardware Setup
 
-  1. Assemble the box
+1\. Assemble the box
   > Please follow the marks on the parts, match each paired marks. The marks should be facing inside the box.
   <div style="text-align:center">
   <!-- make the following images centered -->
   <img src="./assets/assemble.gif">
   </div>
 
-2. Plug servo to NodeMCU ( Yellow/Light Orange-D4, Red-3.3v, Brown-GND )
+2\. Plug servo to NodeMCU ( Yellow/Light Orange-D4, Red-3.3v, Brown-GND )
   <div style="text-align:center">
   <!-- make the following images centered -->
   <img src="./assets/servo_bb.png" height="400">
