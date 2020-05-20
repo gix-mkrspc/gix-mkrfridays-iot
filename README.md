@@ -28,8 +28,12 @@ By completing this project you will have a device which can wave 👋 when its v
 ---
 ## Hardware Setup
 1. Assemble the box
-> In progress
-2. Plug servo to NodeMCU ( Yellow-D4, Red-3.3v, Brown-GND )
+> Please follow the marks on the parts, match each paired marks. The marks should be facing inside the box.
+<div style="text-align:center">
+<!-- make the following images centered -->
+<img src="./assets/assemble.gif">
+</div>
+2. Plug servo to NodeMCU ( Yellow/Light Orange-D4, Red-3.3v, Brown-GND )
 <div style="text-align:center">
 <!-- make the following images centered -->
 <img src="./assets/servo_bb.png" height="400">
@@ -38,21 +42,25 @@ By completing this project you will have a device which can wave 👋 when its v
 
 ---
 ## Software Setup
+
+To make the process easier, you don't need to assemble everything while you set up the software. **You just need to plug your servo to the NodeMCU.** After the software is setup successfully you can then attach them to the box.
+
 *Prerequisites*
 - working WiFi, you know the SSID(name) & password
 - computer or phone
 
 We've already flashed the basic program, all you need to do is follow the below steps and connect it to your WiFi.
 
-### The Overall Process
-1. Connect to NodeMCU WiFi
-2. Tell it your own WiFi name and password
-3. Let it connect to your WiFi
-4. Connect your phone back to your own WiFi
-5. Use your own WiFi to browse to the device's web server to control it
+### What We're Gonna Do - The Overall Process
+This is just a high level walkthrough, detail steps to follow are in the next section.
+- Connect to NodeMCU WiFi
+- Tell it your own WiFi name and password
+- Let it connect to your WiFi
+- Connect your phone back to your own WiFi
+- Use your own WiFi to browse to the device's web server to control it
 
-### Detailed Steps
-1. Plug in the micro USB cable (just for providing power, don't need to connect to a computer)
+### Detailed Steps 
+1. Plug in the micro USB cable for the NodeMCU (just for providing power, don't need to connect to a computer)
 2. Use your device (PC/phone) and connect to the WiFi netowrk: "gix_iot"
 3. Password: "gixmkrspc"
 4. Wait for the webpage to popup, you will see this:
@@ -62,8 +70,9 @@ We've already flashed the basic program, all you need to do is follow the below 
 > An iPhone or Android device may change the WiFi network back to your home network, since the NodeMCU doesn't have an Internet connection. You may need to ensure that "Auto Join" is turned off for your other WiFi (iPhone) or forget the other network (Android); this step is only to get the NodeMCU onto your home network and then you can re-join and/or turn on "Auto Join" for your home WiFi again.
 5. Enter your **own WiFi's** SSID(name) & password,
  you can use your home WiFi, phone hotspot, etc.
-6. Wait a few seconds after you see the success message. Press RST button on the NodeMCU and let the NodeMCU connect to your WiFi
-7. Disconnect your device from "gix_iot" and reconnect your device to your own WiFi
+6. After you see this message, **Press RST button on the NodeMCU**, let the NodeMCU reboot and connect to your own WiFi
+![wifi_setup](./assets/wifisetup_screenshot.png)
+7. Disconnect your device from "gix_iot" and **reconnect your device to your own WiFi**
 8. Open your browser and go to [http://servo_test.local](http://servo_test.local) you will see this page:
 ![control_screenshot](./assets/control_screenshot.png)
 > If you can't see this page, try refreshing the page several times in 1-2 minutes. After 1-2 minutes, if you still can't see this page. Go back to step **2.** and connect to "gix_iot" again. This time you might get a WiFi list in your popup page, connect to the WiFi you want.
@@ -72,6 +81,14 @@ We've already flashed the basic program, all you need to do is follow the below 
   
 ### Congratulations! 👏👏👏
 Now that the WiFi connection is configured, your NodeMCU will automatically connect to your WiFi every time it boots up.
+
+10. You can attach the servo and board to the enclosure
+<div style="text-align:center">
+<!-- make the following images centered -->
+<img src="./assets/finish0.jpg" height="300">
+<img src="./assets/finish1.jpg" height="300">
+<img src="./assets/finish2.jpg" height="300">
+</div>
 
 > If you want to connect to another WiFi, turn off or get away from the WiFi signal you previously connected to. Once the NodeMCU failed to connect to WiFi, it will start "ap mode" and you can reset it from step **2.**
 
