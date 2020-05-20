@@ -10,7 +10,7 @@
 </div>
 
 ## About
-The NodeMCU is an open-source firmware and development kit which allows us to use a low-cost ESP8266 WiFi MCU to provide “the best platform for IOT application development at the lowest cost” [NodeMCU homepage](https://www.nodemcu.com/index_en.html).  
+The NodeMCU is an open-source firmware and development kit which allows us to use a low-cost ESP8266 Wi-Fi MCU to provide “the best platform for IOT application development at the lowest cost” [NodeMCU homepage](https://www.nodemcu.com/index_en.html).  
 
 ESPHome is the software and firmware flasher we’ll be using; it’s a “system to control your ESP8266/ESP32 by simple yet powerful configuration files and control them remotely through Home Automation systems” [ESPHome homepage](https://esphome.io).
 
@@ -20,19 +20,21 @@ ESPHome is the software and firmware flasher we’ll be using; it’s a “syste
 By completing this project you will have a device which can wave 👋 when its virtual button is pressed via its website.
 
 ## Components
-- NodeMCU WiFi development board *1
+- NodeMCU Wi-Fi development board *1
 - Servo motor (with three types of arm) *1
 - Enclosure box (MDF sheet) *6
 - Waving sign *1
   
 ---
 ## Hardware Setup
+
 1. Assemble the box
 > Please follow the marks on the parts, match each paired marks. The marks should be facing inside the box.
 <div style="text-align:center">
 <!-- make the following images centered -->
 <img src="./assets/assemble.gif">
 </div>
+
 2. Plug servo to NodeMCU ( Yellow/Light Orange-D4, Red-3.3v, Brown-GND )
 <div style="text-align:center">
 <!-- make the following images centered -->
@@ -46,41 +48,41 @@ By completing this project you will have a device which can wave 👋 when its v
 To make the process easier, you don't need to assemble everything while you set up the software. **You just need to plug your servo to the NodeMCU.** After the software is setup successfully you can then attach them to the box.
 
 *Prerequisites*
-- working WiFi, you know the SSID(name) & password
-- computer or phone
+- working Wi-Fi, you know the SSID(name) & password
+- computer or phone or any other device with Wi-Fi and a web browser
 
-We've already flashed the basic program, all you need to do is follow the below steps and connect it to your WiFi.
+We've already flashed the basic program, all you need to do is follow the below steps and connect it to your Wi-Fi.
 
 ### What We're Gonna Do - The Overall Process
-This is just a high level walkthrough, detail steps to follow are in the next section.
-- Connect to NodeMCU WiFi
-- Tell it your own WiFi name and password
-- Let it connect to your WiFi
-- Connect your phone back to your own WiFi
-- Use your own WiFi to browse to the device's web server to control it
+This is just a high level walkthrough; detailed steps to follow are in the next section.
+- Connect to NodeMCU Wi-Fi
+- Tell it your own Wi-Fi name and password
+- Let it connect to your Wi-Fi
+- Connect your phone back to your own Wi-Fi
+- Use your own Wi-Fi to browse to the device's web server to control it
 
 ### Detailed Steps 
 1. Plug in the micro USB cable for the NodeMCU (just for providing power, don't need to connect to a computer)
-2. Use your device (PC/phone) and connect to the WiFi netowrk: "gix_iot"
+2. Use your device (PC/phone) and connect to the Wi-Fi netowrk: "gix_iot"
 3. Password: "gixmkrspc"
 4. Wait for the webpage to popup, you will see this:
 ![ap_screenshot](./assets/ap_screenshot.png)
-> (If the page didn't show up after you connected to the WiFi, try to go to http://192.168.4.1/)
+> (If the page didn't show up after you connected to the Wi-Fi, try to go to http://192.168.4.1/)
 >
-> An iPhone or Android device may change the WiFi network back to your home network, since the NodeMCU doesn't have an Internet connection. You may need to ensure that "Auto Join" is turned off for your other WiFi (iPhone) or forget the other network (Android); this step is only to get the NodeMCU onto your home network and then you can re-join and/or turn on "Auto Join" for your home WiFi again.
-5. Enter your **own WiFi's** SSID(name) & password,
- you can use your home WiFi, phone hotspot, etc.
-6. After you see this message, **Press RST button on the NodeMCU**, let the NodeMCU reboot and connect to your own WiFi
-![wifi_setup](./assets/wifisetup_screenshot.png)
-7. Disconnect your device from "gix_iot" and **reconnect your device to your own WiFi**
+> An iPhone or Android device may change the Wi-Fi network back to your home network, since the NodeMCU doesn't have an Internet connection. You may need to ensure that "Auto Join" is turned off for your other Wi-Fi (iPhone) or forget the other network (Android); this step is only to get the NodeMCU onto your home network and then you can re-join and/or turn on "Auto Join" for your home Wi-Fi again.
+5. Enter your **own Wi-Fi's** SSID(name) & password,
+ you can use your home Wi-Fi, phone hotspot, etc.
+6. After you see this message, **Press RST button on the NodeMCU**, let the NodeMCU reboot and connect to your own Wi-Fi
+![Wi-Fi_setup](./assets/Wi-Fisetup_screenshot.png)
+7. Disconnect your device from "gix_iot" and **reconnect your device to your own Wi-Fi**
 8. Open your browser and go to [http://servo_test.local](http://servo_test.local) you will see this page:
 ![control_screenshot](./assets/control_screenshot.png)
-> If you can't see this page, try refreshing the page several times in 1-2 minutes. After 1-2 minutes, if you still can't see this page. Go back to step **2.** and connect to "gix_iot" again. This time you might get a WiFi list in your popup page, connect to the WiFi you want.
+> If you can't see this page, try refreshing the page several times in 1-2 minutes. After 1-2 minutes, if you still can't see this page. Go back to step **2.** and connect to "gix_iot" again. This time you might get a Wi-Fi list in your popup page, connect to the Wi-Fi you want.
 
 9. Click Toggle, you can move the servo now 👋!
   
 ### Congratulations! 👏👏👏
-Now that the WiFi connection is configured, your NodeMCU will automatically connect to your WiFi every time it boots up.
+Now that the Wi-Fi connection is configured, your NodeMCU will automatically connect to your Wi-Fi every time it boots up.
 
 10. You can attach the servo and board to the enclosure
 <div style="text-align:center">
@@ -90,7 +92,7 @@ Now that the WiFi connection is configured, your NodeMCU will automatically conn
 <img src="./assets/finish2.jpg" height="300">
 </div>
 
-> If you want to connect to another WiFi, turn off or get away from the WiFi signal you previously connected to. Once the NodeMCU failed to connect to WiFi, it will start "ap mode" and you can reset it from step **2.**
+> If you want to connect to another Wi-Fi, turn off or get away from the Wi-Fi signal you previously connected to. Once the NodeMCU failed to connect to Wi-Fi, it will start "ap mode" and you can reset it from step **2.**
 
 > In the future we will have other activities involving this device! Please see the section below, tinker and bring any ideas or changes up so we can bring that functionality to other cohort members!
 
