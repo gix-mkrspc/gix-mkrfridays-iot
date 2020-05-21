@@ -1,10 +1,13 @@
 import sys
 
-if sys.platform == "darwin" or sys.platform == "linux":
-    # TODO: logic for getting to files from Linux/Unix
-    print("it's a mac or linux")
+if sys.platform == "darwin":
+    # TODO: add path here!
+    print("it's a mac")
+elif sys.platform == "linux":
+    # TODO: add path here!
+    print("it's linux")
 elif sys.platform == "win32":
-    # TODO: logic for getting to files from Windows
+    # TODO: add path here!
     print("it's Windows")
 
 # TODO: this is a work in progress and needs to be implemented!
