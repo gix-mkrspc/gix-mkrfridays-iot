@@ -13,12 +13,6 @@ elif sys.platform == "win32":
     ARDUINO_BOARD_PATH = ""
     print("it's Windows")
 
-# check if board path is set
-try: 
-    print(f"Your Arduino board path is: {ARDUINO_BOARD_PATH}")
-except NameError:
-    print(f"Error: no valid board path condition for platform: {sys.platform}")
-
 # TODO: this is a work in progress and needs to be implemented!
 def update_line_file(file_path, str_line_to_update, str_replacement, comment_only):
     '''
@@ -41,3 +35,11 @@ def update_line_file(file_path, str_line_to_update, str_replacement, comment_onl
     #  the line should be obliterated and replaced with str_replacement
     file_modified = False
     return file_modified
+
+def main():
+    # check if board path is set
+    try: 
+        print(f"Your Arduino board path is: {ARDUINO_BOARD_PATH}")
+    except NameError:
+        print(f"Error: no valid board path condition for platform: {sys.platform}")
+main()
