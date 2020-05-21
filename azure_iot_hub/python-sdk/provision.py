@@ -6,20 +6,21 @@ from azure.mgmt.resource import ResourceManagementClient
 import os
 import random
 import subprocess
+import json
 
 RESOURCE_GROUP_NAME = "iot-porg"
 RESOURCE_GROUP_LOCATION = "centralus"
 
 
-IOT_HUB_NAME = f"{RESOURCE_GROUP_NAME}-iothub"
+# IOT_HUB_NAME = f"{RESOURCE_GROUP_NAME}-iothub"
 # TODO: This should be grabbing from a text file or other source so that we have
 # idempotency/consistent runs
-# IOT_HUB_NAME = f"{RESOURCE_GROUP_NAME}-{random.randint(1,100000):05}"
+IOT_HUB_NAME = f"{RESOURCE_GROUP_NAME}-{random.randint(1,100000):05}"
 
 IOT_HUB_SKU = "F1" # free tier
 IOT_HUB_PARTITION_COUNT = "2" # free tier
 
-IOT_HUB_NUM_DEVICES = 3
+IOT_HUB_NUM_DEVICES = 5
 IOT_HUB_DEVICE_PREFIX = "device"
 # Obtain the management object for resources, using the credentials from the CLI login.
 resource_client = get_client_from_cli_profile(ResourceManagementClient)
@@ -46,7 +47,6 @@ print(f"Provisioned resource group {rg_result.name} in the {rg_result.location} 
 
 # install extension if not already installed
 
-# TODO: check if IoTHub exists already?
 print('Checking az cli iot-hub extension...')
 os.system('az extension add --name azure-iot')
 print('Creating iot hub')
@@ -54,8 +54,6 @@ os.system(f"az iot hub create --name {IOT_HUB_NAME} "
         f"--resource-group {RESOURCE_GROUP_NAME} --sku {IOT_HUB_SKU} --verbose "
         f"--partition-count {IOT_HUB_PARTITION_COUNT}"
         )
-# TODO: use subprocess
-# direct_output = subprocess.check_output('ls', shell=True) #could be anything here.
 
 # The return value is another ResourceGroup object with all the details of the
 # new group. In this case the call is synchronous: the resource group has been
@@ -64,14 +62,20 @@ os.system(f"az iot hub create --name {IOT_HUB_NAME} "
 # Optional line to delete the resource group
 #resource_client.resource_groups.delete("PythonSDKExample-ResourceGroup-rg")
 
-# TODO: check that IOTHub exists before attempting to create a new one
 os.system(f"az iot hub create --name {IOT_HUB_NAME} "
         f"--resource-group {RESOURCE_GROUP_NAME} --sku {IOT_HUB_SKU} --verbose "
         f"--partition-count {IOT_HUB_PARTITION_COUNT}"
         )
 
+# TODO: use subprocess to parse json and give us a map of the deviceids and connections strings 
+# direct_output = subprocess.check_output('ls', shell=True) #could be anything here.
 for i in range(IOT_HUB_NUM_DEVICES):
     device_name = f"{IOT_HUB_DEVICE_PREFIX}-{random.randint(1,100000):05}"
     os.system(f"az iot hub device-identity create -n {IOT_HUB_NAME} "
             f"-d {device_name}"
             )
+
+# Hi justin
+
+# az extension add --name azure-iot
+# az iot hub monitor-events --hub-name {IOT_HUB_NAME}
