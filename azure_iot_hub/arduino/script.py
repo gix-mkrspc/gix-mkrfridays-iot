@@ -5,7 +5,7 @@ if sys.platform == "darwin":
     print("it's a mac")
 elif sys.platform == "linux":
     # TODO: add path here!
-    print("it's linux")
+    print("it's linux ")
 elif sys.platform == "win32":
     # TODO: add path here!
     print("it's Windows")
