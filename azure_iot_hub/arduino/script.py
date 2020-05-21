@@ -1,16 +1,23 @@
+from pathlib import Path
 import sys
 
+HOME = str(Path.home())
+
 if sys.platform == "darwin":
-    # TODO: add path here!
-    ARDUINO_BOARD_PATH = ""
+    # TODO: add path to Arduino15 library here here!
+    ARDUINO_PACKAGES_PATH = f"{str(HOME)}/Library/Arduino15"
+    # TODO: we need to get the directory contents since the version can change!
+    #  e.g. 2.6.3 cannot be STATICALLY input. It must be gotten programmatically
+    # TODO: This can be abstracted to HIGHER LEVEL once we have the base path using os.sep() for instance
+    BOARD_PATH = Path(f"{ARDUINO_PACKAGES_PATH}/packages/esp8266/hardware/esp8266/")
     print("it's a mac")
 elif sys.platform == "linux":
     # TODO: add path here!
-    ARDUINO_BOARD_PATH = ""
+    ARDUINO_PACKAGES_PATH = ""
     print("it's linux i broke it")
 elif sys.platform == "win32":
     # TODO: add path here!
-    ARDUINO_BOARD_PATH = ""
+    ARDUINO_PACKAGES_PATH = ""
     print("it's Windows")
 
 # TODO: this is a work in progress and needs to be implemented!
@@ -39,7 +46,7 @@ def update_line_file(file_path, str_line_to_update, str_replacement, comment_onl
 def main():
     # check if board path is set
     try: 
-        print(f"Your Arduino board path is: {ARDUINO_BOARD_PATH}")
+        print(f"Your Arduino board path is: {str(ARDUINO_PACKAGES_PATH)}")
     except NameError:
         print(f"Error: no valid board path condition for platform: {sys.platform}")
 main()
