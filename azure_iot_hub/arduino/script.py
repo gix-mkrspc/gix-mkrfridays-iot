@@ -2,13 +2,22 @@ import sys
 
 if sys.platform == "darwin":
     # TODO: add path here!
+    ARDUINO_BOARD_PATH = ""
     print("it's a mac")
 elif sys.platform == "linux":
     # TODO: add path here!
+    ARDUINO_BOARD_PATH = ""
     print("it's linux i broke it")
 elif sys.platform == "win32":
     # TODO: add path here!
+    ARDUINO_BOARD_PATH = ""
     print("it's Windows")
+
+# check if board path is set
+try: 
+    print(f"Your Arduino board path is: {ARDUINO_BOARD_PATH}")
+except NameError:
+    print(f"Error: no valid board path condition for platform: {sys.platform}")
 
 # TODO: this is a work in progress and needs to be implemented!
 def update_line_file(file_path, str_line_to_update, str_replacement, comment_only):
