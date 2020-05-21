@@ -75,7 +75,6 @@ for i in range(IOT_HUB_NUM_DEVICES):
             f"-d {device_name}"
             )
 
-# Hi justin
 
 # az extension add --name azure-iot
 # az iot hub monitor-events --hub-name {IOT_HUB_NAME}
