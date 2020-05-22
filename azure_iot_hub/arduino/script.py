@@ -1,14 +1,8 @@
+from pathlib import Path
+import os
 import sys
 
-if sys.platform == "darwin":
-    # TODO: add path here!
-    print("it's a mac")
-elif sys.platform == "linux":
-    # TODO: add path here!
-    print("it's linux")
-elif sys.platform == "win32":
-    # TODO: C:\Users\username\AppData\Local\Arduino15\packages
-    print("it's Windows")
+ESP8266_PACKAGE_PATH = Path("packages/esp8266/hardware/esp8266/")
 
 # TODO: this is a work in progress and needs to be implemented!
 def update_line_file(file_path, str_line_to_update, str_replacement, comment_only):
@@ -32,3 +26,48 @@ def update_line_file(file_path, str_line_to_update, str_replacement, comment_onl
     #  the line should be obliterated and replaced with str_replacement
     file_modified = False
     return file_modified
+
+
+def main():
+    # NOTE: You should use forward slashes with pathlib functions.
+    # The Path() object will convert forward slashes into the correct k
+    # ind of slash for the current operating system. Nice!
+
+    # If you want to add on to the path, you can use the / operator directly in your code.
+    # Say goodbye to typing out os.path.join(a, b) over and over.
+    # See: https://bit.ly/3gfS7D8 for more info
+    if sys.platform == "darwin":
+        ARDUINO_PACKAGES_PATH = Path(Path.home() / "Library/Arduino15")
+    elif sys.platform == "linux":
+        # TODO: add path here!
+        ARDUINO_PACKAGES_PATH = ""
+        print("it's linux i broke it")
+    elif sys.platform == "win32":
+        # TODO: add path here!
+        ARDUINO_PACKAGES_PATH = ""
+        print("it's Windows")
+
+    # check if board path is set
+    try:
+        print(f"Your Arduino board path for platform {sys.platform} is: {str(ARDUINO_PACKAGES_PATH)}")
+    except NameError:
+        print(
+            f"Error: no valid board path condition for platform: {sys.platform}")
+
+    versions = []
+    with os.scandir(str(ARDUINO_PACKAGES_PATH / ESP8266_PACKAGE_PATH)) as entries:
+        for version in entries:
+            # avoid files and hidden files
+            if version.is_dir and not version.name.startswith('.'):
+                versions.append(Path(ARDUINO_PACKAGES_PATH / ESP8266_PACKAGE_PATH / version))
+
+    for path in range(len(versions)):
+        versions[path] = Path(versions[path] / "cores/esp8266/")
+
+    for path in versions:
+        arduino_header_file = Path(path / "Arduino.h")
+        if arduino_header_file.exists():
+            print(f"Updating {str(arduino_header_file)}")
+            # TODO: implement change to comment code
+
+main()
