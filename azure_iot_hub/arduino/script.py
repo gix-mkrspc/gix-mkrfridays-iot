@@ -5,9 +5,9 @@ if sys.platform == "darwin":
     print("it's a mac")
 elif sys.platform == "linux":
     # TODO: add path here!
-    print("it's linux i broke it")
+    print("it's linux")
 elif sys.platform == "win32":
-    # TODO: add path here!
+    # TODO: C:\Users\username\AppData\Local\Arduino15\packages
     print("it's Windows")
 
 # TODO: this is a work in progress and needs to be implemented!
