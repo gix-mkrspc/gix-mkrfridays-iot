@@ -25,7 +25,7 @@ def update_line_file(file_path, str_line_to_update, str_replacement, comment_onl
     :rtype: boolean
     '''
     file_modified = False
-    for line in fileinput.input(file_path):
+    for line in fileinput.input(file_path, inplace=True):
         if line.startswith(str_line_to_update):
             if comment_only:
                 line = "// " + line
@@ -81,7 +81,7 @@ def main():
         if arduino_header_file.exists():
             copyfile(arduino_header_file, str(Path(path / "Arduino.h.orig")))
             print(f"Updating {str(arduino_header_file)}")
-            # TODO: implement change to comment code
+            # TODO: implement change to comment code{}
             get_update = update_line_file(str(arduino_header_file), "#define round(x)", str_replacement = None, comment_only = True)
             print(get_update)
 main()
