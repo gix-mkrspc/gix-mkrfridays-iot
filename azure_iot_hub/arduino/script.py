@@ -1,6 +1,7 @@
 from pathlib import Path
 import os
 import sys
+from shutil import copyfile
 
 ESP8266_PACKAGE_PATH = Path("packages/esp8266/hardware/esp8266/")
 
@@ -67,6 +68,7 @@ def main():
     for path in versions:
         arduino_header_file = Path(path / "Arduino.h")
         if arduino_header_file.exists():
+            copyfile(arduino_header_file, str(Path(path / "Arduino.h.orig")))
             print(f"Updating {str(arduino_header_file)}")
             # TODO: implement change to comment code
 
