@@ -44,7 +44,7 @@ def main():
         print("it's linux i broke it")
     elif sys.platform == "win32":
         # TODO: add path here!
-        ARDUINO_PACKAGES_PATH = ""
+        ARDUINO_PACKAGES_PATH = Path(Path.home() / "AppData/Local/Arduino15")
         print("it's Windows")
 
     # check if board path is set
