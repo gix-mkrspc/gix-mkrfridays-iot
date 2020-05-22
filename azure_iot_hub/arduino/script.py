@@ -1,6 +1,7 @@
 from pathlib import Path
 import os
 import sys
+import fileinput
 
 ESP8266_PACKAGE_PATH = Path("packages/esp8266/hardware/esp8266/")
 
@@ -22,9 +23,19 @@ def update_line_file(file_path, str_line_to_update, str_replacement, comment_onl
     :returns: whether the string was replaced in the file or it was commented out
     :rtype: boolean
     '''
+    file_modified = False
+    for line in fileinput.input(file_path):
+        if line.startswith(str_line_to_update):
+            if comment_only:
+                line = "// " + line
+            else:
+                line = line.replace(str_line_to_update, str_replacement)
+            file_modified = True
+        print (line)
+        
     # ! Important; this updates an entire line! If the substring matches
     #  the line should be obliterated and replaced with str_replacement
-    file_modified = False
+    
     return file_modified
 
 
@@ -69,5 +80,8 @@ def main():
         if arduino_header_file.exists():
             print(f"Updating {str(arduino_header_file)}")
             # TODO: implement change to comment code
-
+            get_update = update_line_file(str(arduino_header_file), "#define round(x)", str_replacement = None, comment_only = True)
+            print(get_update)
 main()
+
+
