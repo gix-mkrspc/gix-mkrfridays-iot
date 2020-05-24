@@ -50,10 +50,21 @@ print(f"Provisioned resource group {rg_result.name} in the {rg_result.location} 
 print('Checking az cli iot-hub extension...')
 os.system('az extension add --name azure-iot')
 print('Creating iot hub')
-os.system(f"az iot hub create --name {IOT_HUB_NAME} "
-        f"--resource-group {RESOURCE_GROUP_NAME} --sku {IOT_HUB_SKU} --verbose "
-        f"--partition-count {IOT_HUB_PARTITION_COUNT}"
-        )
+direct_output = subprocess.check_output(['az', 'iot', 'hub', 'create', '--name', IOT_HUB_NAME, \
+                                        '--resource-group', RESOURCE_GROUP_NAME, '--sku', IOT_HUB_SKU, '--verbose',\
+                                        '--partition-count', IOT_HUB_PARTITION_COUNT])
+
+
+output_clean = direct_output.decode('utf8').replace("\n", '')
+iotHub_output = json.loads(output_clean)
+
+with open(f'{IOT_HUB_NAME}.json', 'w') as json_file:
+    json.dump(iotHub_output, json_file)
+
+# print(iotHub_output["id"])
+# iotHub_output is a parsed json 
+# data can be extracted for function app
+
 
 # The return value is another ResourceGroup object with all the details of the
 # new group. In this case the call is synchronous: the resource group has been
@@ -62,18 +73,26 @@ os.system(f"az iot hub create --name {IOT_HUB_NAME} "
 # Optional line to delete the resource group
 #resource_client.resource_groups.delete("PythonSDKExample-ResourceGroup-rg")
 
-os.system(f"az iot hub create --name {IOT_HUB_NAME} "
-        f"--resource-group {RESOURCE_GROUP_NAME} --sku {IOT_HUB_SKU} --verbose "
-        f"--partition-count {IOT_HUB_PARTITION_COUNT}"
-        )
+#os.system(f"az iot hub create --name {IOT_HUB_NAME} "
+#        f"--resource-group {RESOURCE_GROUP_NAME} --sku {IOT_HUB_SKU} --verbose "
+#        f"--partition-count {IOT_HUB_PARTITION_COUNT}"
+#        )
 
 # TODO: use subprocess to parse json and give us a map of the deviceids and connections strings 
 # direct_output = subprocess.check_output('ls', shell=True) #could be anything here.
+
+
 for i in range(IOT_HUB_NUM_DEVICES):
     device_name = f"{IOT_HUB_DEVICE_PREFIX}-{random.randint(1,100000):05}"
-    os.system(f"az iot hub device-identity create -n {IOT_HUB_NAME} "
-            f"-d {device_name}"
-            )
+    direct_output = subprocess.check_output(['az', 'iot', 'hub', 'device-identity', 'create', '-n', \
+                                        IOT_HUB_NAME, '-d', device_name])
+    output_clean = direct_output.decode('utf8').replace("\n", '')
+    device_output = json.loads(output_clean)                                    
+    with open(f'{device_name}.json', 'w') as json_file:
+        json.dump(device_output, json_file)                                    
+    #output_clean = direct_output.decode('utf8').replace("\n", '')
+    #device_output = json.loads(output_clean)
+    #output from each device 
 
 
 # az extension add --name azure-iot
