@@ -52,7 +52,7 @@ def main():
         ARDUINO_PACKAGES_PATH = Path(Path.home() / "Library/Arduino15")
     elif sys.platform == "linux":
         # TODO: add path here!
-        ARDUINO_PACKAGES_PATH = ""
+        ARDUINO_PACKAGES_PATH = Path(Path.home() / ".arduino15/packages/")
         print("it's linux i broke it")
     elif sys.platform == "win32":
         # TODO: add path here!
