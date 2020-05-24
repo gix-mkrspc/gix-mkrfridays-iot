@@ -12,6 +12,11 @@ RESOURCE_GROUP_NAME = "iot-porg"
 RESOURCE_GROUP_LOCATION = "centralus"
 
 
+# TODO: add options for determining which resources to create
+# CREATE_IOT_HUB = os.environ(['CREATE_IOT_HUB'])
+CREATE_IOT_HUB = False
+
+
 # IOT_HUB_NAME = f"{RESOURCE_GROUP_NAME}-iothub"
 # TODO: This should be grabbing from a text file or other source so that we have
 # idempotency/consistent runs
@@ -49,10 +54,11 @@ print(f"Provisioned resource group {rg_result.name} in the {rg_result.location} 
 
 print('Checking az cli iot-hub extension...')
 os.system('az extension add --name azure-iot')
-print('Creating iot hub')
-direct_output = subprocess.check_output(['az', 'iot', 'hub', 'create', '--name', IOT_HUB_NAME, \
-                                        '--resource-group', RESOURCE_GROUP_NAME, '--sku', IOT_HUB_SKU, '--verbose',\
-                                        '--partition-count', IOT_HUB_PARTITION_COUNT])
+if CREATE_IOT_HUB:
+    print('Creating iot hub')
+    direct_output = subprocess.check_output(['az', 'iot', 'hub', 'create', '--name', IOT_HUB_NAME, \
+                                            '--resource-group', RESOURCE_GROUP_NAME, '--sku', IOT_HUB_SKU, '--verbose',\
+                                            '--partition-count', IOT_HUB_PARTITION_COUNT])
 
 
 output_clean = direct_output.decode('utf8').replace("\n", '')
