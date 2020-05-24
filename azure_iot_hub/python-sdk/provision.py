@@ -12,14 +12,22 @@ RESOURCE_GROUP_NAME = "MKRPSC_iot-porg"
 RESOURCE_GROUP_LOCATION = "West US"
 
 
+# TODO: add options for determining which resources to create
+# CREATE_IOT_HUB = os.environ(['CREATE_IOT_HUB'])
+CREATE_IOT_HUB = False
+
+
 # IOT_HUB_NAME = f"{RESOURCE_GROUP_NAME}-iothub"
 # TODO: This should be grabbing from a text file or other source so that we have
 # idempotency/consistent runs
 #IOT_HUB_NAME = f"{RESOURCE_GROUP_NAME}-{random.randint(1,100000):05}"
 
+# TODO: wrap this in a try and also use WITH
 IOT_database= open("IoT_device_name.txt", "r")
 IOT_database_list=IOT_database.read()
-IOT_HUB_NAME=IOT_database_list.split('\n' )     #This will be a list of string
+# TODO: should be IOT_DEVICE_NAMES
+IOT_HUB_NAME = "internet-of-porg"
+IOT_DEVICE_NAMES=IOT_database_list.split('\n' )     #This will be a list of string
 
 
 IOT_HUB_SKU = "F1" # free tier
@@ -56,16 +64,25 @@ print(f"Provisioned resource group {rg_result.name} in the {rg_result.location} 
 
 print('Checking az cli iot-hub extension...')
 os.system('az extension add --name azure-iot')
-print('Creating iot hub')
+if CREATE_IOT_HUB:
+    print('Creating iot hub')
+    direct_output = subprocess.check_output(['az', 'iot', 'hub', 'create', '--name', IOT_HUB_NAME, \
+                                            '--resource-group', RESOURCE_GROUP_NAME, '--sku', IOT_HUB_SKU, '--verbose',\
+                                            '--partition-count', IOT_HUB_PARTITION_COUNT])
 
 
-#use a for loop to create n IoT devices in the database
-for i in range (IOT_HUB_NUM_DEVICES)
-    os.system(f"az iot hub create --name {IOT_HUB_NAME[i]} "
-         f"--resource-group {RESOURCE_GROUP_NAME} --sku {IOT_HUB_SKU} --verbose "
-         f"--partition-count {IOT_HUB_PARTITION_COUNT}"
-         )
+output_clean = direct_output.decode('utf8').replace("\n", '')
+iotHub_output = json.loads(output_clean)
+# TODO: use at all?
+with open(f'{IOT_HUB_DEVICES}.json', 'w') as json_file:
+    json.dump(iotHub_output, json_file)
 
+# first line: iothub name and connection url internet-of-porg.azurewebsites.***
+# Device ID, Connection String
+
+# print(iotHub_output["id"])
+# iotHub_output is a parsed json 
+# data can be extracted for function app
 
 
 # The return value is another ResourceGroup object with all the details of the
@@ -85,13 +102,29 @@ for i in range (IOT_HUB_NUM_DEVICES)
 #repeated?????????????????????
 
 
-# TODO: use subprocess to parse json and give us a map of the deviceids and connections strings 
-# direct_output = subprocess.check_output('ls', shell=True) #could be anything here.
+# TODO: have an option for whether the user is providing a file with strings on each line
+# with the identifiers for the devices or if they just have a finite number defined with a prefix
 for j in range(IOT_HUB_NUM_DEVICES):
     device_name = IOT_HUB_NAME[j]
     os.system(f"az iot hub device-identity create -n {IOT_HUB_NAME} "
             f"-d {device_name}"
             )
+
+# TODO: use subprocess to parse json and give us a map of the deviceids and connections strings 
+# direct_output = subprocess.check_output('ls', shell=True) #could be anything here.
+
+# TODO: if there's a prefix just append the number i to the end of it
+for i in range(IOT_HUB_NUM_DEVICES):
+    device_name = f"{IOT_HUB_DEVICE_PREFIX}-{random.randint(1,100000):05}"
+    direct_output = subprocess.check_output(['az', 'iot', 'hub', 'device-identity', 'create', '-n', \
+                                        IOT_HUB_NAME, '-d', device_name])
+    output_clean = direct_output.decode('utf8').replace("\n", '')
+    device_output = json.loads(output_clean)                                    
+    with open(f'{device_name}.json', 'w') as json_file:
+        json.dump(device_output, json_file)                                    
+    #output_clean = direct_output.decode('utf8').replace("\n", '')
+    #device_output = json.loads(output_clean)
+    #output from each device 
 
 from azure.cli.core import get_default_cli
 connec_string=[]
