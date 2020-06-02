@@ -19,7 +19,13 @@ ESPHome is the software and firmware flasher we’ll be using; it’s a “syste
 ## Upon Completion
 By completing this project you will have a device which can wave 👋 when its virtual button is pressed via its website.
 
-## Components
+<div style="text-align:center">
+<!-- make the following images centered -->
+<img src="./assets/hand.gif" height="400">
+<img src="./assets/boba.gif" height="400">
+</div>
+
+## Components Required
 - NodeMCU Wi-Fi development board *1
 - Servo motor (with three types of arm) *1
 - Enclosure box (MDF sheet) *6
