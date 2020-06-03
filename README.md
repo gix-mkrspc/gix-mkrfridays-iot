@@ -79,7 +79,7 @@ This is just a high level walkthrough; detailed steps to follow are in the next 
 5. Enter your **own Wi-Fi's** SSID(name) & password,
  you can use your home Wi-Fi, phone hotspot, etc.
 6. After you see this message, **Press RST button on the NodeMCU**, let the NodeMCU reboot and connect to your own Wi-Fi
-![Wi-Fi_setup](./assets/Wi-Fisetup_screenshot.png)
+![Wi-Fi_setup](./assets/wifisetup_screenshot.png)
 7. Disconnect your device from "gix_iot" and **reconnect your device to your own Wi-Fi**
 8. Open your browser and go to [http://servo_test.local](http://servo_test.local) you will see this page:
 ![control_screenshot](./assets/control_screenshot.png)
