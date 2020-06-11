@@ -66,6 +66,7 @@ def main():
         print(
             f"Error: no valid board path condition for platform: {sys.platform}")
 
+    # Get to file to comment out #define round(x) in the Arduino.h file
     versions = []
     with os.scandir(str(ARDUINO_PACKAGES_PATH / ESP8266_PACKAGE_PATH)) as entries:
         for version in entries:
@@ -73,19 +74,17 @@ def main():
             if version.is_dir and not version.name.startswith('.'):
                 versions.append(Path(ARDUINO_PACKAGES_PATH / ESP8266_PACKAGE_PATH / version))
 
-    for path in range(len(versions)):
-        versions[path] = Path(versions[path] / "cores/esp8266/")
-
-    # Comment out #define round(x) in the Arduino.h file
     for path in versions:
-        arduino_header_file = Path(path / "Arduino.h")
+        arduino_header_file = Path(path / "cores/esp8266/Arduino.h")
         if arduino_header_file.exists():
-            copyfile(arduino_header_file, str(Path(path / "Arduino.h.orig")))
+            copyfile(arduino_header_file, str(Path(path / "cores/esp8266/Arduino.h.orig")))
             print(f"Updating {str(arduino_header_file)}")
             get_update = update_line_file(str(arduino_header_file), "#define round(x)", str_replacement = None, comment_only = True)
             print(get_update)
+        # platform_txt_file = path
     
     # TODO: update platform.txt with changes similar to above but replace line instead of comment
+
 main()
 
 
