@@ -76,14 +76,16 @@ def main():
     for path in range(len(versions)):
         versions[path] = Path(versions[path] / "cores/esp8266/")
 
+    # Comment out #define round(x) in the Arduino.h file
     for path in versions:
         arduino_header_file = Path(path / "Arduino.h")
         if arduino_header_file.exists():
             copyfile(arduino_header_file, str(Path(path / "Arduino.h.orig")))
             print(f"Updating {str(arduino_header_file)}")
-            # TODO: implement change to comment code{}
             get_update = update_line_file(str(arduino_header_file), "#define round(x)", str_replacement = None, comment_only = True)
             print(get_update)
+    
+    # TODO: update platform.txt with changes similar to above but replace line instead of comment
 main()
 
 
