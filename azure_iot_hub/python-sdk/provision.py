@@ -45,13 +45,14 @@ IOT_HUB_NAME = "internet-of-porg"
 # format of file should be:
 # name, connection-string,
 # name2, connectionstring2,
-# 'joey,1234,' -> 
-# {'joey':'1234',
-#  'justin':'12345',}
+
+
+
 # IOT_DEVICE_NAMES=IOT_database_list.split('\n')     #This will be a list of string
 
 # Used to name the devices upon provision
-IOT_DEVICE_NAMES= ['joey','justin','codes']
+
+IOT_DEVICE_NAMES= ['cody','justin','joey]
 
 IOT_HUB_SKU = "F1" # free tier
 IOT_HUB_PARTITION_COUNT = "2" # free tier
@@ -80,10 +81,10 @@ az_cli('extension add --name azure-iot')
 
 if CREATE_IOT_HUB:
     print('Creating iot hub')
-    # TODO: convert to az cli
-    direct_output = subprocess.check_output(['az', 'iot', 'hub', 'create', '--name', IOT_HUB_NAME, \
-                                            '--resource-group', RESOURCE_GROUP_NAME, '--sku', IOT_HUB_SKU, '--verbose',\
-                                            '--partition-count', IOT_HUB_PARTITION_COUNT])
+    
+    az_cli([az iot hub create -{IOT_HUB_NAME} -r {RESOURCE_GROUP_NAME} -s {IOT_HUB_SKU} -v -p {IOT_HUB_PARTITION_COUNT}])
+   # az_cli([az iot hub create -{IOT_HUB_NAME} --resource-group {RESOURCE_GROUP_NAME} --sku {IOT_HUB_SKU} --verbose --partition-count IOT_HUB_PARTITION_COUNT])
+
     output_clean = direct_output.decode('utf8').replace("\n", '')
     iot_hub_output = json.loads(output_clean)
 
