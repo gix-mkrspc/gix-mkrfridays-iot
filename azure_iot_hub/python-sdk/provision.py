@@ -66,8 +66,11 @@ print(f"Provisioned resource group {rg_result.name} in the {rg_result.location} 
 
 # install extension if not already installed
 print('Checking az cli iot-hub extension...')
+
 # TODO: az_cli function
-os.system('az extension add --name azure-iot')
+az_cli('az extension add --name azure-iot')
+#os.system('az extension add --name azure-iot')
+
 if CREATE_IOT_HUB:
     print('Creating iot hub')
     # TODO: convert to az cli
@@ -93,9 +96,12 @@ with open(f'{IOT_HUB_NAME}.json', 'w') as json_file:
 # for i in range(IOT_HUB_NUM_DEVICES):
 #     device_name = IOT_HUB_NAME[i]
 #     # TODO: use az_cli function REMEMBER TO REMOVE AZ from command though!
-#     os.system(f"az iot hub device-identity create -n {IOT_HUB_NAME} "
+#     az_cli(f"az iot hub device-identity create -n {IOT_HUB_NAME} "
 #             f"-d {device_name}"
 #             )
+##    #os.system(f"az iot hub device-identity create -n {IOT_HUB_NAME} "
+##             f"-d {device_name}"
+##             )
 
 # TODO: if there's a prefix just append the number i to the end of it
 #  OR if it's from the file just use that name
@@ -122,6 +128,7 @@ connec_string=[]
 
 for i in range(IOT_HUB_NUM_DEVICES):
     device_name=str(IOT_DEVICE_NAMES[i])
+
     az_cli(f"iot hub device-identity show-connection-string -d {device_name} -n {IOT_HUB_NAME}")
     # connec_string[j]= az_cli("az iot hub device-identity show-connection-string")
 
