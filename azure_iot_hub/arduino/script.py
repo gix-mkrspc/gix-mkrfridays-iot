@@ -30,7 +30,7 @@ def update_line_file(file_path, str_line_to_update, str_replacement, comment_onl
             if comment_only:
                 line = "// " + line
             else:
-                line = line.replace(str_line_to_update, str_replacement)
+                line = str_replacement
             file_modified = True
         print (line)
         
@@ -80,9 +80,15 @@ def main():
             copyfile(arduino_header_file, str(Path(path / "cores/esp8266/Arduino.h.orig")))
             print(f"Updating {str(arduino_header_file)}")
             get_update = update_line_file(str(arduino_header_file), "#define round(x)", str_replacement = None, comment_only = True)
-            print(get_update)
-        # platform_txt_file = path
+            print(f"Updated {arduino_header_file}: {get_update}")
+        platform_txt_file = Path(path / "platform.txt")
+        if platform_txt_file.exists():
+            copyfile(platform_txt_file, str(Path(path / "platform.txt.orig")))
+            print(f"Updating {str(platform_txt_file)}")
+            get_update = update_line_file(str(platform_txt_file), "build.extra_flags=", str_replacement = "build.extra_flags=-DESP8266 -DDONT_USE_UPLOADTOBLOB -DUSE_BALTIMORE_CERT", comment_only = False)
+            print(f"Updated {platform_txt_file}: {get_update}")
     
+
     # TODO: update platform.txt with changes similar to above but replace line instead of comment
 
 main()
