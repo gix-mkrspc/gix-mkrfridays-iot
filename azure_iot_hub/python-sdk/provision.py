@@ -37,18 +37,27 @@ CREATE_IOT_HUB = False
 IOT_HUB_NAME = "internet-of-porg"
 
 # TODO: wrap this in a try and also use WITH
-IOT_database= open("IoT_device_name.txt", "r")
-IOT_database_list=IOT_database.read()
-# TODO: may require rstrip() after split to work on windows + macOS + linux
-# see https://bit.ly/2ytd1NN since there may be a line feed as well 
-IOT_DEVICE_NAMES=IOT_database_list.split('\n')     #This will be a list of string
+# IOT_database= open("IoT_device_name.txt", "r")
+# IOT_database_list=IOT_database.read()
+# # TODO: may require rstrip() after split to work on windows + macOS + linux
+# # see https://bit.ly/2ytd1NN since there may be a line feed as well 
 
+# format of file should be:
+# name, connection-string,
+# name2, connectionstring2,
+# 'joey,1234,' -> 
+# {'joey':'1234',
+#  'justin':'12345',}
+# IOT_DEVICE_NAMES=IOT_database_list.split('\n')     #This will be a list of string
+
+# Used to name the devices upon provision
+IOT_DEVICE_NAMES= ['joey','justin','codes']
 
 IOT_HUB_SKU = "F1" # free tier
 IOT_HUB_PARTITION_COUNT = "2" # free tier
 
-IOT_HUB_NUM_DEVICES = len(IOT_HUB_NAME)  #read the length of the name txt
-
+# IOT_HUB_NUM_DEVICES = len(IOT_HUB_NAME)  #read the length of the name txt
+IOT_HUB_NUM_DEVICES = 0  #read the length of the name txt
 
 IOT_HUB_DEVICE_PREFIX = "device"
 # Obtain the management object for resources, using the credentials from the CLI login.
@@ -67,9 +76,7 @@ print(f"Provisioned resource group {rg_result.name} in the {rg_result.location} 
 # install extension if not already installed
 print('Checking az cli iot-hub extension...')
 
-# TODO: az_cli function
-az_cli('az extension add --name azure-iot')
-#os.system('az extension add --name azure-iot')
+az_cli('extension add --name azure-iot')
 
 if CREATE_IOT_HUB:
     print('Creating iot hub')
@@ -80,9 +87,9 @@ if CREATE_IOT_HUB:
     output_clean = direct_output.decode('utf8').replace("\n", '')
     iot_hub_output = json.loads(output_clean)
 
-# I think ithis is fine since it has all the info needed!
-with open(f'{IOT_HUB_NAME}.json', 'w') as json_file:
-    json.dump(iot_hub_output, json_file)
+    # I think ithis is fine since it has all the info needed!
+    with open(f'{IOT_HUB_NAME}.json', 'w') as json_file:
+        json.dump(iot_hub_output, json_file)
 
 # TODO: create a CSV with the following:
 # Device ID, Connection String
@@ -99,9 +106,7 @@ with open(f'{IOT_HUB_NAME}.json', 'w') as json_file:
 #     az_cli(f"az iot hub device-identity create -n {IOT_HUB_NAME} "
 #             f"-d {device_name}"
 #             )
-##    #os.system(f"az iot hub device-identity create -n {IOT_HUB_NAME} "
-##             f"-d {device_name}"
-##             )
+
 
 # TODO: if there's a prefix just append the number i to the end of it
 #  OR if it's from the file just use that name
@@ -123,6 +128,7 @@ for i in range(IOT_HUB_NUM_DEVICES):
     #output_clean = direct_output.decode('utf8').replace("\n", '')
     #device_output = json.loads(output_clean)
     #output from each device 
+    # TODO: append device name and connection string to file here
 
 connec_string=[]
 
