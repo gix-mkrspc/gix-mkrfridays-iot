@@ -41,7 +41,7 @@ def update_line_file(
             if comment_only:
                 line = f"{comment_str} {line}"
             else:
-                line = str_replacement
+                line = f"{str_replacement}\n"
         sys.stdout.write(line)
 
     return file_modified
