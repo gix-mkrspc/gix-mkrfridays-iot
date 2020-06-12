@@ -47,6 +47,31 @@ def update_line_file(
     return file_modified
 
 
+def confirm_overwrite(file_path):
+    '''
+    Confirms whether to overwrite changes otherwise exits program
+
+    :param file_path: The path to the file
+    :type file_path: str
+    '''
+    prompt = f"There is already a backup file at" \
+             f" {file_path}; proceeding will" \
+             f" overwrite this file. Do you wish to proceed?" \
+             f" Input Y or N:" \
+             f" "
+    while True:
+        response = input(prompt)
+        response = response.lower()
+        if response == 'n':
+            print("No changes made... exiting")
+            sys.exit()
+        elif response == 'y':
+            print("Backup will be overwritten")
+            break
+        else:
+            print("Ensure your response is a Y or N")
+
+
 def main():
     if sys.platform == "darwin":
         ARDUINO_PACKAGES_PATH = Path(Path.home() / "Library/Arduino15")
@@ -77,6 +102,10 @@ def main():
                                      ESP8266_PACKAGE_PATH / version))
 
     for path in versions:
+        arduino_header_backup = Path(path / "cores/esp8266/Arduino.h.orig")
+        if arduino_header_backup.exists():
+            confirm_overwrite(arduino_header_backup)
+
         arduino_header_file = Path(path / "cores/esp8266/Arduino.h")
         if arduino_header_file.exists():
             print(f"Updating: {arduino_header_file}")
@@ -90,6 +119,10 @@ def main():
                 arduino_header_file, "#define round(x)", str_replacement=None,
                 comment_only=True, comment_str="//")
             print(f"Updated: {get_update} for {arduino_header_file}")
+
+        platform_txt_backup = Path(path / "platform.txt.orig")
+        if platform_txt_backup.exists():
+            confirm_overwrite(platform_txt_backup)
 
         platform_txt_file = Path(path / "platform.txt")
         if platform_txt_file.exists():
