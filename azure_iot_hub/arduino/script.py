@@ -6,8 +6,6 @@ from shutil import copyfile
 
 ESP8266_PACKAGE_PATH = Path("packages/esp8266/hardware/esp8266/")
 
-# TODO: this is a work in progress and needs to be implemented!
-
 
 def update_line_file(
         file_path, str_line_to_update, str_replacement, comment_only=False,
@@ -34,14 +32,13 @@ def update_line_file(
     '''
     file_modified = False
     for line in fileinput.input(file_path, inplace=True):
-        # TODO: determine if file already modified before
-        # changing file_modified
         if line.startswith(str_line_to_update):
-            file_modified = True
             if comment_only:
                 line = f"{comment_str} {line}"
-            else:
+                file_modified = True
+            elif line.rstrip() != str_replacement:
                 line = f"{str_replacement}\n"
+                file_modified = True
         sys.stdout.write(line)
 
     return file_modified
@@ -73,6 +70,26 @@ def confirm_overwrite(file_path):
 
 
 def main():
+    prompt = "This script will attempt to automatically update" \
+             " your ESP8266 board files to work with Azure IoT Hub" \
+             " for the repo https://github.com/Azure/azure-iot-arduino" \
+             "\nPlease refer to the license agreement there." \
+             "\nThis script will update all installed versions of board" \
+             " libraries for ESP8266." \
+             "\nDo you wish to proceed? Please answer Y or N:" \
+             " "
+    while True:
+        response = input(prompt)
+        response = response.lower()
+        if response == 'n':
+            print("No changes made... exiting")
+            sys.exit()
+        elif response == 'y':
+            print("Proceeding")
+            break
+        else:
+            print("Ensure your response is a Y or N")
+
     if sys.platform == "darwin":
         ARDUINO_PACKAGES_PATH = Path(Path.home() / "Library/Arduino15")
     elif sys.platform == "linux":
@@ -81,16 +98,13 @@ def main():
     elif sys.platform == "win32":
         # TODO: add path here!
         ARDUINO_PACKAGES_PATH = Path(Path.home() / "AppData/Local/Arduino15")
+    else:
+        print(f"Error: no valid board path condition for platform:"
+              f" {sys.platform}")
+        sys.exit()
 
-    # check if board path is set
-    try:
-        print(
-            f"Arduino board path for platform {sys.platform} is:"
-            f" {ARDUINO_PACKAGES_PATH}")
-    except NameError:
-        print(
-            f"Error: no valid board path condition for platform:"
-            f" {sys.platform}")
+    print(f"Arduino board path for platform {sys.platform} is:"
+          f" {ARDUINO_PACKAGES_PATH}")
 
     # Check for and change other versions if they exist
     versions = []
