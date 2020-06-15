@@ -50,6 +50,7 @@ USE_RANDOM_IDENTIFIERS = False
 # TODO: wrap this in a try and also use WITH
 # IOT_database= open("IoT_device_name.txt", "r")
 # IOT_database_list=IOT_database.read()
+
 # # TODO: may require rstrip() after split to work on windows + macOS + linux
 # # see https://bit.ly/2ytd1NN since there may be a line feed as well 
 
@@ -57,7 +58,7 @@ USE_RANDOM_IDENTIFIERS = False
 
 # Used to name the devices upon provision
 
-IOT_DEVICE_NAMES= ['cody','justin','joey]
+#IOT_DEVICE_NAMES= ['cody','justin','joey]
 
 
 # The number of devices you want to create.
