@@ -25,19 +25,19 @@ def az_cli(command):
 
 # Setting CREATE_IOT_HUB to True/False will either create an IOT HUB or not.
 # If you set it to false it will use the IOT_HUB_NAME variable to assume that the hub exists
-CREATE_IOT_HUB = False
+CREATE_IOT_HUB = True
 
 # The RESOURCE_GROUP_NAME/RESOURCE_GROUP_LOCATION are where your resources will be created
 # and referenced
-RESOURCE_GROUP_NAME = "MKRPSC_iot-porg"
+RESOURCE_GROUP_NAME = "MKRPSC-iot-porg"
 RESOURCE_GROUP_LOCATION = "West US"
 
 IOT_HUB_NAME = f"{RESOURCE_GROUP_NAME}-iothub"
 # # TODO: This should be grabbing from a text file or other source so that we have
 # # idempotency/consistent runs
-# IOT_HUB_NAME = f"{RESOURCE_GROUP_NAME}-{random.randint(1,100000):05}"
+IOT_HUB_NAME = f"{RESOURCE_GROUP_NAME}-{random.randint(1,100000):05}"
 
-IOT_HUB_NAME = "internet-of-porg"
+# IOT_HUB_NAME = "internet-of-porg-1234"
 
 # If you have a list of device identifiers, you can pass these in as a file
 #   in the following format:
@@ -50,13 +50,13 @@ IOT_HUB_NAME = "internet-of-porg"
 USE_RANDOM_IDENTIFIERS = False
 
 # TODO: wrap this in a try and also use WITH
-# IOT_database= open("IoT_device_name.txt", "r")
-# IOT_database_list=IOT_database.read()
+IOT_database= open("IoT_device_name.txt", "r")
+IOT_database_list=IOT_database.read()
 
 # # TODO: may require rstrip() after split to work on windows + macOS + linux
 # # see https://bit.ly/2ytd1NN since there may be a line feed as well
 
-# IOT_DEVICE_NAMES=IOT_database_list.split('\n')     #This will be a list of string
+IOT_DEVICE_NAMES=IOT_database_list.split('\n')     #This will be a list of string
 
 # Used to name the devices upon provision
 
@@ -97,15 +97,14 @@ az_cli('extension add --name azure-iot')
 if CREATE_IOT_HUB:
     print('Creating iot hub')
 
-    az_cli([az iot hub create - {IOT_HUB_NAME} - r {RESOURCE_GROUP_NAME} - s {IOT_HUB_SKU} - v - p {IOT_HUB_PARTITION_COUNT}])
+    direct_output = az_cli(f"iot hub create -n {IOT_HUB_NAME} --resource-group {RESOURCE_GROUP_NAME} --sku {IOT_HUB_SKU} --verbose --partition-count {IOT_HUB_PARTITION_COUNT}")
    # az_cli([az iot hub create -{IOT_HUB_NAME} --resource-group {RESOURCE_GROUP_NAME} --sku {IOT_HUB_SKU} --verbose --partition-count IOT_HUB_PARTITION_COUNT])
 
-    output_clean = direct_output.decode('utf8').replace("\n", '')
-    iot_hub_output = json.loads(output_clean)
+    # iot_hub_output = json.loads(output_clean)
 
     # I think ithis is fine since it has all the info needed!
-    with open(f'{IOT_HUB_NAME}.json', 'w') as json_file:
-        json.dump(iot_hub_output, json_file)
+    # with open(f'{IOT_HUB_NAME}.json', 'w') as json_file:
+    #   json.dump(iot_hub_output, json_file)
 
 # TODO: create a CSV with the following:
 # Device ID, Connection String
@@ -136,12 +135,12 @@ for i in range(IOT_HUB_NUM_DEVICES):
         f"iot hub device-identity create -n {IOT_HUB_NAME} -d {device_name}")
     # direct_output = subprocess.check_output(['az', 'iot', 'hub', 'device-identity', 'create', '-n', \
     #                                     IOT_HUB_NAME, '-d', device_name])
-    output_clean = direct_output.decode('utf8').replace("\n", '')
-    device_output = json.loads(output_clean)
+    #output_clean = direct_output.decode('utf8').replace("\n", '')
+    #device_output = json.loads(output_clean)
     # TODO: get the right device parameters here using
     #     az_cli(f"iot hub device-identity show-connection-string -d {device_name} -n {IOT_HUB_NAME}")
-    with open(f'{device_name}.json', 'w') as json_file:
-        json.dump(device_output, json_file)
+    #with open(f'{device_name}.json', 'w') as json_file:
+    #    json.dump(device_output, json_file)
     #output_clean = direct_output.decode('utf8').replace("\n", '')
     #device_output = json.loads(output_clean)
     # output from each device
