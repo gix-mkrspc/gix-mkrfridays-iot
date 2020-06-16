@@ -7,6 +7,7 @@ import random
 import subprocess
 import json
 
+
 def az_cli(command):
     args = command.split()
     print(args)
@@ -20,6 +21,7 @@ def az_cli(command):
 
 # What does this script do?
 # The main purpose of this script is to provision IoT Hub resources on Azure
+
 
 # Setting CREATE_IOT_HUB to True/False will either create an IOT HUB or not.
 # If you set it to false it will use the IOT_HUB_NAME variable to assume that the hub exists
@@ -52,19 +54,19 @@ USE_RANDOM_IDENTIFIERS = False
 # IOT_database_list=IOT_database.read()
 
 # # TODO: may require rstrip() after split to work on windows + macOS + linux
-# # see https://bit.ly/2ytd1NN since there may be a line feed as well 
+# # see https://bit.ly/2ytd1NN since there may be a line feed as well
 
 # IOT_DEVICE_NAMES=IOT_database_list.split('\n')     #This will be a list of string
 
 # Used to name the devices upon provision
 
-#IOT_DEVICE_NAMES= ['cody','justin','joey]
+# IOT_DEVICE_NAMES= ['cody','justin','joey]
 
 
 # The number of devices you want to create.
 # Only applies if you set USE_RANDOM_IDENTIFIERS to True
 # Otherwise it will be the length of IOT_DEVICE_NAMES
-IOT_HUB_NUM_DEVICES = 0 
+IOT_HUB_NUM_DEVICES = 0
 
 # The SKU; by default it's set for free tier
 IOT_HUB_SKU = "F1"
@@ -84,7 +86,8 @@ rg_result = resource_client.resource_groups.create_or_update(
     }
 )
 
-print(f"Provisioned/updated resource group {rg_result.name} in the {rg_result.location} region")
+print(
+    f"Provisioned/updated resource group {rg_result.name} in the {rg_result.location} region")
 
 # install extension if not already installed
 print('Checking az cli iot-hub extension...')
@@ -93,8 +96,8 @@ az_cli('extension add --name azure-iot')
 
 if CREATE_IOT_HUB:
     print('Creating iot hub')
-    
-    az_cli([az iot hub create -{IOT_HUB_NAME} -r {RESOURCE_GROUP_NAME} -s {IOT_HUB_SKU} -v -p {IOT_HUB_PARTITION_COUNT}])
+
+    az_cli([az iot hub create - {IOT_HUB_NAME} - r {RESOURCE_GROUP_NAME} - s {IOT_HUB_SKU} - v - p {IOT_HUB_PARTITION_COUNT}])
    # az_cli([az iot hub create -{IOT_HUB_NAME} --resource-group {RESOURCE_GROUP_NAME} --sku {IOT_HUB_SKU} --verbose --partition-count IOT_HUB_PARTITION_COUNT])
 
     output_clean = direct_output.decode('utf8').replace("\n", '')
@@ -108,7 +111,7 @@ if CREATE_IOT_HUB:
 # Device ID, Connection String
 
 # print(iot_hub_output["id"])
-# iot_hub_output is a parsed json 
+# iot_hub_output is a parsed json
 # data can be extracted for function app
 
 # TODO: have an option for whether the user is providing a file with strings on each line
@@ -129,26 +132,28 @@ for i in range(IOT_HUB_NUM_DEVICES):
         device_name = IOT_DEVICE_NAMES[i]
     else:
         device_name = f"{IOT_HUB_DEVICE_PREFIX}-{i}"
-    az_cli(f"iot hub device-identity create -n {IOT_HUB_NAME} -d {device_name}")
+    az_cli(
+        f"iot hub device-identity create -n {IOT_HUB_NAME} -d {device_name}")
     # direct_output = subprocess.check_output(['az', 'iot', 'hub', 'device-identity', 'create', '-n', \
     #                                     IOT_HUB_NAME, '-d', device_name])
     output_clean = direct_output.decode('utf8').replace("\n", '')
-    device_output = json.loads(output_clean)      
-    # TODO: get the right device parameters here using      
-    #     az_cli(f"iot hub device-identity show-connection-string -d {device_name} -n {IOT_HUB_NAME}")                         
+    device_output = json.loads(output_clean)
+    # TODO: get the right device parameters here using
+    #     az_cli(f"iot hub device-identity show-connection-string -d {device_name} -n {IOT_HUB_NAME}")
     with open(f'{device_name}.json', 'w') as json_file:
-        json.dump(device_output, json_file)                                    
+        json.dump(device_output, json_file)
     #output_clean = direct_output.decode('utf8').replace("\n", '')
     #device_output = json.loads(output_clean)
-    #output from each device 
+    # output from each device
     # TODO: append device name and connection string to file here
 
-connec_string=[]
+connec_string = []
 
 for i in range(IOT_HUB_NUM_DEVICES):
-    device_name=str(IOT_DEVICE_NAMES[i])
+    device_name = str(IOT_DEVICE_NAMES[i])
 
-    az_cli(f"iot hub device-identity show-connection-string -d {device_name} -n {IOT_HUB_NAME}")
+    az_cli(
+        f"iot hub device-identity show-connection-string -d {device_name} -n {IOT_HUB_NAME}")
     # connec_string[j]= az_cli("az iot hub device-identity show-connection-string")
 
 # az extension add --name azure-iot
