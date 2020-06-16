@@ -116,3 +116,5 @@ In order to customize the microcontroller, you have to re-flash the NodeMCU agai
 4. run `./run.sh`
     - You can replace the `servo.yaml` file here with your own configuration!
 5. You can now develop your own custom esphome components! Get started on [esphome.io](http://esphome.io)
+
+# Remote Control (via Azure IoT Hub)
