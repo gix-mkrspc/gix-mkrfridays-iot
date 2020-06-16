@@ -32,12 +32,10 @@ CREATE_IOT_HUB = True
 RESOURCE_GROUP_NAME = "MKRPSC-iot-porg"
 RESOURCE_GROUP_LOCATION = "West US"
 
-IOT_HUB_NAME = f"{RESOURCE_GROUP_NAME}-iothub"
 # # TODO: This should be grabbing from a text file or other source so that we have
 # # idempotency/consistent runs
-IOT_HUB_NAME = f"{RESOURCE_GROUP_NAME}-{random.randint(1,100000):05}"
+IOT_HUB_NAME = "internet-of-porg"
 
-# IOT_HUB_NAME = "internet-of-porg-1234"
 
 # If you have a list of device identifiers, you can pass these in as a file
 #   in the following format:
