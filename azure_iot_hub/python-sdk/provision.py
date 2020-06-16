@@ -64,7 +64,7 @@ IOT_DEVICE_NAMES=IOT_database_list.split('\n')     #This will be a list of strin
 # The number of devices you want to create.
 # Only applies if you set USE_RANDOM_IDENTIFIERS to True
 # Otherwise it will be the length of IOT_DEVICE_NAMES
-IOT_HUB_NUM_DEVICES = 0
+IOT_HUB_NUM_DEVICES = len(IOT_DEVICE_NAMES)
 
 # The SKU; by default it's set for free tier
 IOT_HUB_SKU = "F1"
