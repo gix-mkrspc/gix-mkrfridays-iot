@@ -6,6 +6,7 @@ import os
 import random
 import subprocess
 import json
+import csv
 
 
 def az_cli(command):
@@ -34,7 +35,7 @@ RESOURCE_GROUP_LOCATION = "West US"
 
 # # TODO: This should be grabbing from a text file or other source so that we have
 # # idempotency/consistent runs
-IOT_HUB_NAME = "internet-of-porg"
+IOT_HUB_NAME = "internet-of-porg-test"
 
 
 # If you have a list of device identifiers, you can pass these in as a file
@@ -64,7 +65,7 @@ IOT_DEVICE_NAMES=IOT_database_list.split('\n')     #This will be a list of strin
 # The number of devices you want to create.
 # Only applies if you set USE_RANDOM_IDENTIFIERS to True
 # Otherwise it will be the length of IOT_DEVICE_NAMES
-IOT_HUB_NUM_DEVICES = 0
+IOT_HUB_NUM_DEVICES = len(IOT_DEVICE_NAMES)
 
 # The SKU; by default it's set for free tier
 IOT_HUB_SKU = "F1"
@@ -144,14 +145,11 @@ for i in range(IOT_HUB_NUM_DEVICES):
     # output from each device
     # TODO: append device name and connection string to file here
 
-connec_string = []
-
-for i in range(IOT_HUB_NUM_DEVICES):
-    device_name = str(IOT_DEVICE_NAMES[i])
-
-    az_cli(
-        f"iot hub device-identity show-connection-string -d {device_name} -n {IOT_HUB_NAME}")
-    # connec_string[j]= az_cli("az iot hub device-identity show-connection-string")
+with open('output.csv', 'w', newline='') as csvfiles:
+    writer = csv.writer(csvfiles)
+    for device_name in IOT_DEVICE_NAMES:
+        direct_output = az_cli(f"iot hub device-identity show-connection-string -d {device_name} -n {IOT_HUB_NAME}")
+        writer.writerow([device_name,direct_output["connectionString"]])
 
 # az extension add --name azure-iot
 # az iot hub monitor-events --hub-name {IOT_HUB_NAME}
