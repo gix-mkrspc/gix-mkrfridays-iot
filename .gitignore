@@ -151,3 +151,4 @@ local.settings.json
 .python_packages
 
 *.csv
+azure_iot_hub/python-sdk/.vscode/settings.json
