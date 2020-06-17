@@ -27,34 +27,24 @@ def az_cli(command):
 
 # The RESOURCE_GROUP_NAME/RESOURCE_GROUP_LOCATION
 #  are where your resources will be created and referenced
-RESOURCE_GROUP_NAME = "MKRPSC-iot-porg"
+RESOURCE_GROUP_NAME = "MKRSPC-iot-porg"
 RESOURCE_GROUP_LOCATION = "West US"
 
-# TODO: this can be stored in a pickle; check if it exists
-# Can be merged into the below CREATE_IOT_HUB to set it automatically
-# NOTE: IOT_HUB_NAME must be unique globally across Azure
-# IOT_HUB_NAME = f"{RESOURCE_GROUP_NAME}-{random.randint(1,100000):05}"
-
-
-#create a new random IOT_HUB_NAME and pickle.dump 
+# NOTE: IOT_HUB_NAME must be unique globally across Azure 
 try:
     IOT_HUB_NAME = pickle.load(open("IOT_pickle.pickle", "rb"))
     print("IOT_HUB_NAME received")
 except (OSError, IOError) as e:
-    IOT_HUB_NAME= f"{RESOURCE_GROUP_NAME}-{random.randint(1,100000):05}"
+    IOT_HUB_NAME = f"{RESOURCE_GROUP_NAME}-{random.randint(1,100000):05}"
     pickle.dump(IOT_HUB_NAME, open("IOT_pickle.pickle", "wb"))
-    print("IOT_HUB_NAME DNE, created new names: " + IOT_HUB_NAME )
-
-
-
-
+    print("IOT_HUB_NAME DNE, created new names: " + IOT_HUB_NAME)
 
 # Setting CREATE_IOT_HUB to True/False will either create an IOT HUB or not.
 # If you set it to false it will use the IOT_HUB_NAME variable
 #  to assume that the hub exists
 CREATE_IOT_HUB = True
 
-# If you have a list of device identifiers, you can pass these in as a file
+# If you have a list of device identifiers, you can pass these in as a filer
 #   in the following format:
 #   device_id1
 #   device_id2
