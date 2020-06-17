@@ -34,6 +34,19 @@ RESOURCE_GROUP_LOCATION = "West US"
 # NOTE: IOT_HUB_NAME must be unique globally across Azure
 IOT_HUB_NAME = f"{RESOURCE_GROUP_NAME}-{random.randint(1,100000):05}"
 
+# import pickle
+
+# try:
+#     foo = pickle.load(open("var.pickle", "rb"))
+# except (OSError, IOError) as e:
+#     foo = 3
+#     pickle.dump(foo, open("var.pickle", "wb"))
+
+# if pickle.exists():
+#     IOT_HUB_NAME = pickle.load
+# else:
+#     create a new random IOT_HUB_NAME and pickle.dump for next time
+
 # Setting CREATE_IOT_HUB to True/False will either create an IOT HUB or not.
 # If you set it to false it will use the IOT_HUB_NAME variable
 #  to assume that the hub exists
@@ -48,6 +61,8 @@ CREATE_IOT_HUB = True
 # Otherwise, devices will be created with random identifiers. All identifiers
 # and connection strings will be stored in a file called
 # INSERT FILE NAME HERE.txt
+
+# TODO: this should be implemented and tested
 USE_RANDOM_IDENTIFIERS = False
 
 # TODO: wrap this in a try and also use WITH
