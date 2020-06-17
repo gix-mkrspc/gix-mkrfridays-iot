@@ -31,6 +31,7 @@ RESOURCE_GROUP_LOCATION = "West US"
 
 # TODO: this can be stored in a pickle; check if it exists
 # Can be merged into the below CREATE_IOT_HUB to set it automatically
+# NOTE: IOT_HUB_NAME must be unique globally across Azure
 IOT_HUB_NAME = f"{RESOURCE_GROUP_NAME}-{random.randint(1,100000):05}"
 
 # Setting CREATE_IOT_HUB to True/False will either create an IOT HUB or not.
