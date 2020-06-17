@@ -150,5 +150,8 @@ appsettings.json
 local.settings.json
 .python_packages
 
+# Custom
 *.csv
+*.pickle
 azure_iot_hub/python-sdk/.vscode/settings.json
+
