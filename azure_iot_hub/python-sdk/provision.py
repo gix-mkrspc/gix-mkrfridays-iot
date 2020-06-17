@@ -7,6 +7,7 @@ import random
 import subprocess
 import json
 import csv
+import pickle
 
 
 # What does this script do?
@@ -32,20 +33,21 @@ RESOURCE_GROUP_LOCATION = "West US"
 # TODO: this can be stored in a pickle; check if it exists
 # Can be merged into the below CREATE_IOT_HUB to set it automatically
 # NOTE: IOT_HUB_NAME must be unique globally across Azure
-IOT_HUB_NAME = f"{RESOURCE_GROUP_NAME}-{random.randint(1,100000):05}"
+# IOT_HUB_NAME = f"{RESOURCE_GROUP_NAME}-{random.randint(1,100000):05}"
 
-# import pickle
 
-# try:
-#     foo = pickle.load(open("var.pickle", "rb"))
-# except (OSError, IOError) as e:
-#     foo = 3
-#     pickle.dump(foo, open("var.pickle", "wb"))
+#create a new random IOT_HUB_NAME and pickle.dump 
+try:
+    IOT_HUB_NAME = pickle.load(open("IOT_pickle.pickle", "rb"))
+    print("IOT_HUB_NAME received")
+except (OSError, IOError) as e:
+    IOT_HUB_NAME= f"{RESOURCE_GROUP_NAME}-{random.randint(1,100000):05}"
+    pickle.dump(IOT_HUB_NAME, open("IOT_pickle.pickle", "wb"))
+    print("IOT_HUB_NAME DNE, created new names: " + IOT_HUB_NAME )
 
-# if pickle.exists():
-#     IOT_HUB_NAME = pickle.load
-# else:
-#     create a new random IOT_HUB_NAME and pickle.dump for next time
+
+
+
 
 # Setting CREATE_IOT_HUB to True/False will either create an IOT HUB or not.
 # If you set it to false it will use the IOT_HUB_NAME variable
