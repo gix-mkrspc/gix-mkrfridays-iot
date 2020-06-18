@@ -125,7 +125,7 @@ In order to customize the microcontroller, you have to re-flash the NodeMCU agai
 <!-- TODO -->
 
 ### Prerequisites
- - Azure account (easy to sign up at https://azure.com)
+ - Azure account with an active subscription (easy to sign up at https://azure.com)
  - Some shell experience (e.g. understanding of changing directories with cd)
  - Dev tools/knowledge
    - `python` (version 3.6.x to 3.8.x at the time of this writing) (should be accessible from your system PATH environment variable)
