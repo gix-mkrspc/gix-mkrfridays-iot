@@ -63,15 +63,20 @@ STORAGE_ACCT_LOCATION = "westus"
 # Setting CREATE_IOT_HUB to True/False will either create an IOT HUB or not.
 # If you set it to false it will use the IOT_HUB_NAME variable
 #  to assume that the hub exists
-CREATE_IOT_HUB = False
+CREATE_IOT_HUB = True
 
 # Setting CREATE_IOT_DEVICES to True/False will
 # either create IoT Devices or not
-CREATE_IOT_DEVICES = False
+CREATE_IOT_DEVICES = True
 
-# Setting CREATE_IOT_DEVICES to True/False will
+# Setting CREATE_SERVERLESS_APP to True/False will
 # either create a serverless app or not
-CREATE_SERVERLESS_APP = False
+CREATE_SERVERLESS_APP = True
+
+# Setting CREATE_FUNCTIONS to True/False will
+# determine whether to use device list
+# to create functions inside a serverless app or not
+CREATE_FUNCTIONS = True
 
 CREATE_RBAC_SP = True
 
@@ -159,52 +164,55 @@ if CREATE_IOT_DEVICES:
 
 def create_func_app():
     if CREATE_SERVERLESS_APP:
+        print("Creating serverless app")
         os.system(f'func init {FUNCTION_APP_NAME} --python')
         os.chdir(FUNCTION_APP_NAME)
-        print(os.getcwd())
+        az_cli(
+            f'storage account create --name {STORAGE_ACCT_NAME}'
+            f' --location {STORAGE_ACCT_LOCATION}'
+            f' --resource-group {RESOURCE_GROUP_NAME}'
+            f' --sku Standard_LRS'
+        )
+        az_cli(
+            f'functionapp create --resource-group {RESOURCE_GROUP_NAME}'
+            f' --os-type Linux'
+            f' --consumption-plan-location {FUNCTION_APP_LOCATION}'
+            f' --runtime python --runtime-version 3.7 --functions-version 2'
+            f' --name {FUNCTION_APP_NAME}'
+            f' --storage-account {STORAGE_ACCT_NAME}')
+        print('Sleeping for ten seconds to allow'
+              ' cloud resources to provision...')
+        time.sleep(10)
     else:
-        # change to the dir so we can create functions
+        # Switch to this dir anyways
         os.chdir(FUNCTION_APP_NAME)
     # TODO: fix this for Windows using the Path lib
-    with open('../device_connection_strings.csv', 'r', newline='') as csvfile:
-        reader = csv.reader(csvfile)
-        for row in reader:
-            # set the device name as the func name
-            os.system(f'func new --name {row[0]} --template "HTTP trigger"')
-    # TODO: actual deployment of the function app
-    # requires creating a storage group (globally unique)
-    # deploy serverless app
-    # since the az_cli function splits tokens we run this
-    # from the command line to avoid issues with spaces
-    az_cli(
-        f'storage account create --name {STORAGE_ACCT_NAME}'
-        f' --location {STORAGE_ACCT_LOCATION}'
-        f' --resource-group {RESOURCE_GROUP_NAME}'
-        f' --sku Standard_LRS'
-    )
+    if CREATE_FUNCTIONS:
+        print("Creating functions")
+        with open(
+                '../device_connection_strings.csv', 'r', newline='') \
+                as csvfile:
+            reader = csv.reader(csvfile)
+            for row in reader:
+                # set the device name as the func name
+                os.system(
+                    f'func new --name {row[0]}'
+                    f' --template "HTTP trigger"')
 
-    az_cli(
-        f'functionapp create --resource-group {RESOURCE_GROUP_NAME}'
-        f' --os-type Linux'
-        f' --consumption-plan-location {FUNCTION_APP_LOCATION}'
-        f' --runtime python --runtime-version 3.7 --functions-version 2'
-        f' --name {FUNCTION_APP_NAME}'
-        f' --storage-account {STORAGE_ACCT_NAME}')
-
-    print('Sleeping for ten seconds to allow cloud resources to provision...')
-    time.sleep(10)
     print('Deploying function to Azure...')
+    print(os.getcwd())
     os.system(f'func azure functionapp publish {FUNCTION_APP_NAME}')
 
 
-# create_func_app()
+create_func_app()
 
 # TODO: store the output in a pickle
 # The az_cli command wasn't working so revert to os.system
 # and store output in a json file
 # TODO: make this a Path object and be careful; use full paths
-# os.chdir('../')
 # TODO: check if it exists here first
+
+# Create/fetch RBAC and request an OAuth token
 if CREATE_RBAC_SP:
     os.system(
         f'az ad sp create-for-rbac --sdk-auth'
@@ -220,17 +228,16 @@ TENANT_ID = result['tenantId']
 CLIENT_ID = result['clientId']
 CLIENT_SECRET = result['clientSecret']
 RESOURCE = 'https://management.azure.com'
-
 auth_body = {'grant_type': 'client_credentials',
              'client_id': CLIENT_ID,
              'client_secret': CLIENT_SECRET,
              'resource': RESOURCE, }
-
 response = requests.post(
         f'https://login.microsoftonline.com/{TENANT_ID}/oauth2/token',
         data=auth_body)
 aad_token = response.json()['access_token']
 
+# TODO: catch keyerrors and write messages
 with open('device_function_urls.csv', 'w', newline='') as csvfiles:
     writer = csv.writer(csvfiles)
     for device_id in IOT_DEVICE_NAMES:
@@ -244,10 +251,4 @@ with open('device_function_urls.csv', 'w', newline='') as csvfiles:
         url = f'https://{FUNCTION_APP_NAME}.azurewebsites.net/api' \
               f'/{device_id}?code={code}'
         writer.writerow([device_id, url])
-    print("Successfully wrote file!")
-# r = requests.get(
-#     f'https://management.azure.com/subscriptions/{SUBSCRIPTION_ID}'
-#     f'/resourceGroups/{RESOURCE_GROUP_NAME}'
-#     f'/providers/Microsoft.Web/sites/{FUNCTION_APP_NAME}'
-#     f'/functions?api-version=2019-08-01',
-#     headers={'Authorization': f'Bearer {aad_token}'})
+    print("Successfully wrote device function URLs")
