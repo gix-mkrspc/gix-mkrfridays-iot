@@ -156,3 +156,6 @@ local.settings.json
 azure_iot_hub/python-sdk/.vscode/settings.json
 
 azure_iot_hub/python-sdk/host.json
+
+azure-functions-core-tools/
+local-sp.json
