@@ -73,6 +73,8 @@ CREATE_IOT_DEVICES = False
 # either create a serverless app or not
 CREATE_SERVERLESS_APP = False
 
+CREATE_RBAC_SP = True
+
 # If you have a list of device identifiers, you can pass these in as a filer
 #   in the following format:
 #   device_id1
@@ -202,9 +204,13 @@ def create_func_app():
 # and store output in a json file
 # TODO: make this a Path object and be careful; use full paths
 # os.chdir('../')
-# os.system(
-#     f'az ad sp create-for-rbac --sdk-auth'
-#     f' --name {RBAC_SERVICE_PRINCIPAL_NAME} > local-sp.json')
+# TODO: check if it exists here first
+if CREATE_RBAC_SP:
+    os.system(
+        f'az ad sp create-for-rbac --sdk-auth'
+        f' --name {RBAC_SERVICE_PRINCIPAL_NAME} > local-sp.json')
+    print("Waiting a minute for RBAC to finish updating...")
+    time.sleep(60)
 
 with open('local-sp.json') as json_file:
     result = json.load(json_file)
@@ -220,16 +226,10 @@ auth_body = {'grant_type': 'client_credentials',
              'client_secret': CLIENT_SECRET,
              'resource': RESOURCE, }
 
-print("Waiting for RBAC access to complete...")
-# time.sleep(5)
-
 response = requests.post(
         f'https://login.microsoftonline.com/{TENANT_ID}/oauth2/token',
         data=auth_body)
-
 aad_token = response.json()['access_token']
-
-# start with 0
 
 with open('device_function_urls.csv', 'w', newline='') as csvfiles:
     writer = csv.writer(csvfiles)
@@ -244,6 +244,7 @@ with open('device_function_urls.csv', 'w', newline='') as csvfiles:
         url = f'https://{FUNCTION_APP_NAME}.azurewebsites.net/api' \
               f'/{device_id}?code={code}'
         writer.writerow([device_id, url])
+    print("Successfully wrote file!")
 # r = requests.get(
 #     f'https://management.azure.com/subscriptions/{SUBSCRIPTION_ID}'
 #     f'/resourceGroups/{RESOURCE_GROUP_NAME}'
