@@ -8,6 +8,7 @@ import subprocess
 import json
 import csv
 import pickle
+import time
 
 
 # What does this script do?
@@ -30,32 +31,42 @@ def az_cli(command):
 RESOURCE_GROUP_NAME = "MKRSPC-iot-porg"
 RESOURCE_GROUP_LOCATION = "West US"
 
-# NOTE: IOT_HUB_NAME must be unique globally across Azure 
+# NOTE: IOT_HUB_NAME must be unique globally across Azure
 try:
     IOT_HUB_NAME = pickle.load(open("IOT_pickle.pickle", "rb"))
     print("IOT_HUB_NAME received")
 except (OSError, IOError) as e:
     IOT_HUB_NAME = f"{RESOURCE_GROUP_NAME}-{random.randint(1,100000):05}"
     pickle.dump(IOT_HUB_NAME, open("IOT_pickle.pickle", "wb"))
-    print("IOT_HUB_NAME DNE, created new names: " + IOT_HUB_NAME)
+    print("IOT_HUB_NAME DNE, created new name: " + IOT_HUB_NAME)
 
 # TODO: store in a pickle
 # The name of the serverless app which holds the functions
 # Should be globally unique
-SERVERLESS_APP_NAME = "porg-app"
+FUNCTION_APP_NAME = f"{RESOURCE_GROUP_NAME}" \
+                    f"-app-{random.randint(1,100000):05}"
+
+# TODO: remove when done testing
+FUNCTION_APP_NAME = f"porg-app2"
+# find locations with az functionapp list-consumption-locations
+FUNCTION_APP_LOCATION = "westus"
+
+# Must be <= 24 chars and alphanumeric only
+STORAGE_ACCT_NAME = f"storage{random.randint(1,100000):05}"
+STORAGE_ACCT_LOCATION = "westus"
 
 # Setting CREATE_IOT_HUB to True/False will either create an IOT HUB or not.
 # If you set it to false it will use the IOT_HUB_NAME variable
 #  to assume that the hub exists
-CREATE_IOT_HUB = False
+CREATE_IOT_HUB = True
 
 # Setting CREATE_IOT_DEVICES to True/False will
 # either create IoT Devices or not
-CREATE_IOT_DEVICES = False
+CREATE_IOT_DEVICES = True
 
 # Setting CREATE_IOT_DEVICES to True/False will
 # either create a serverless app or not
-CREATE_SERVERLESS_APP = False
+CREATE_SERVERLESS_APP = True
 
 # If you have a list of device identifiers, you can pass these in as a filer
 #   in the following format:
@@ -141,12 +152,12 @@ if CREATE_IOT_DEVICES:
 
 def create_func_app():
     if CREATE_SERVERLESS_APP:
-        os.system(f'func init {SERVERLESS_APP_NAME} --python')
-        os.chdir(SERVERLESS_APP_NAME)
+        os.system(f'func init {FUNCTION_APP_NAME} --python')
+        os.chdir(FUNCTION_APP_NAME)
         print(os.getcwd())
     else:
         # change to the dir so we can create functions
-        os.chdir(SERVERLESS_APP_NAME)
+        os.chdir(FUNCTION_APP_NAME)
     # TODO: fix this for Windows using the Path lib
     with open('../device_connection_strings.csv', 'r', newline='') as csvfile:
         reader = csv.reader(csvfile)
@@ -155,10 +166,29 @@ def create_func_app():
             os.system(f'func new --name {row[0]} --template "HTTP trigger"')
     # TODO: actual deployment of the function app
     # requires creating a storage group (globally unique)
-    # az functionapp create --resource-group AzureFunctionsQuickstart-rg
-    #  --os-type Linux --consumption-plan-location westeurope --runtime python
-    #  --runtime-version 3.7 --functions-version 2 --name <APP_NAME>
-    #  --storage-account <STORAGE_NAME>
-    # func azure functionapp publish <APP_NAME>
+    # deploy serverless app
+    # since the az_cli function splits tokens we run this
+    # from the command line to avoid issues with spaces
+    az_cli(
+        f'storage account create --name {STORAGE_ACCT_NAME}'
+        f' --location {STORAGE_ACCT_LOCATION}'
+        f' --resource-group {RESOURCE_GROUP_NAME}'
+        f' --sku Standard_LRS'
+    )
+
+    direct_output = az_cli(
+        f'functionapp create --resource-group {RESOURCE_GROUP_NAME}'
+        f' --os-type Linux'
+        f' --consumption-plan-location {FUNCTION_APP_LOCATION}'
+        f' --runtime python --runtime-version 3.7 --functions-version 2'
+        f' --name {FUNCTION_APP_NAME}'
+        f' --storage-account {STORAGE_ACCT_NAME}')
+    print('Sleeping for ten seconds to allow cloud resources to provision...')
+    time.sleep(10)
+    os.system(f'func azure functionapp publish {FUNCTION_APP_NAME} --python')
+    # TODO: get function secrets via REST API
+    # https://bit.ly/3d9Yk0A
+    # TODO: Follow the official code guidelines:
+    # https://azure.github.io/azure-sdk/python_introduction.html
 
 create_func_app()
