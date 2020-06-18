@@ -42,17 +42,20 @@ except (OSError, IOError) as e:
 # Setting CREATE_IOT_HUB to True/False will either create an IOT HUB or not.
 # If you set it to false it will use the IOT_HUB_NAME variable
 #  to assume that the hub exists
-CREATE_IOT_HUB = True
+CREATE_IOT_HUB = False
+
+# Setting CREATE_IOT_DEVICES to True/False will
+# either create IoT Devices or not
+CREATE_IOT_DEVICES = False
 
 # If you have a list of device identifiers, you can pass these in as a filer
 #   in the following format:
 #   device_id1
 #   device_id2
 #   ...etc
-# TODO: update file name
 # Otherwise, devices will be created with random identifiers. All identifiers
-# and connection strings will be stored in a file called
-# INSERT FILE NAME HERE.txt
+# and connection strings will be stored in a file called 
+# device_connection_strings.csv
 
 # TODO: this should be implemented and tested
 USE_RANDOM_IDENTIFIERS = False
@@ -107,20 +110,21 @@ if CREATE_IOT_HUB:
 #  or if they just have a finite number defined with a prefix
 # TODO: if there's a prefix just append the number i to the end of it
 #  OR if it's from the file just use that name
-for i in range(IOT_HUB_NUM_DEVICES):
-    if IOT_DEVICE_NAMES:
-        # TODO: this probably needs to be redone
-        device_name = IOT_DEVICE_NAMES[i]
-    else:
-        device_name = f"{IOT_HUB_DEVICE_PREFIX}-{i}"
-    az_cli(
-        f"iot hub device-identity create"
-        f" -n {IOT_HUB_NAME} -d {device_name}")
+if CREATE_IOT_DEVICES:
+    for i in range(IOT_HUB_NUM_DEVICES):
+        if IOT_DEVICE_NAMES:
+            # TODO: this probably needs to be redone
+            device_name = IOT_DEVICE_NAMES[i]
+        else:
+            device_name = f"{IOT_HUB_DEVICE_PREFIX}-{i}"
+        az_cli(
+            f"iot hub device-identity create"
+            f" -n {IOT_HUB_NAME} -d {device_name}")
 
-with open('output.csv', 'w', newline='') as csvfiles:
-    writer = csv.writer(csvfiles)
-    for device_name in IOT_DEVICE_NAMES:
-        direct_output = az_cli(
-            f"iot hub device-identity show-connection-string"
-            f" -d {device_name} -n {IOT_HUB_NAME}")
-        writer.writerow([device_name, direct_output["connectionString"]])
+    with open('device_connection_strings.csv', 'w', newline='') as csvfiles:
+        writer = csv.writer(csvfiles)
+        for device_name in IOT_DEVICE_NAMES:
+            direct_output = az_cli(
+                f"iot hub device-identity show-connection-string"
+                f" -d {device_name} -n {IOT_HUB_NAME}")
+            writer.writerow([device_name, direct_output["connectionString"]])
