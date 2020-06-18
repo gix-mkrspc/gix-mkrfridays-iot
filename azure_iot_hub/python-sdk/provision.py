@@ -9,14 +9,17 @@ import json
 import csv
 import pickle
 import time
+import requests
 
+# TODO: Follow the official code guidelines:
+# https://azure.github.io/azure-sdk/python_introduction.html
 
 # What does this script do?
 # The main purpose of this script is to provision IoT Hub resources on Azure
 
+
 def az_cli(command):
     args = command.split()
-    print(args)
     cli = get_default_cli()
     cli.invoke(args)
     if cli.result.result:
@@ -31,14 +34,16 @@ def az_cli(command):
 RESOURCE_GROUP_NAME = "MKRSPC-iot-porg"
 RESOURCE_GROUP_LOCATION = "West US"
 
+RBAC_SERVICE_PRINCIPAL_NAME = "iotporgpython3"
+
 # NOTE: IOT_HUB_NAME must be unique globally across Azure
 try:
     IOT_HUB_NAME = pickle.load(open("IOT_pickle.pickle", "rb"))
-    print("IOT_HUB_NAME received")
+    print(f"IOT_HUB_NAME received: {IOT_HUB_NAME}")
 except (OSError, IOError) as e:
     IOT_HUB_NAME = f"{RESOURCE_GROUP_NAME}-{random.randint(1,100000):05}"
     pickle.dump(IOT_HUB_NAME, open("IOT_pickle.pickle", "wb"))
-    print("IOT_HUB_NAME DNE, created new name: " + IOT_HUB_NAME)
+    print(f"IOT_HUB_NAME doesn't exist, created: {IOT_HUB_NAME}")
 
 # TODO: store in a pickle
 # The name of the serverless app which holds the functions
@@ -58,15 +63,15 @@ STORAGE_ACCT_LOCATION = "westus"
 # Setting CREATE_IOT_HUB to True/False will either create an IOT HUB or not.
 # If you set it to false it will use the IOT_HUB_NAME variable
 #  to assume that the hub exists
-CREATE_IOT_HUB = True
+CREATE_IOT_HUB = False
 
 # Setting CREATE_IOT_DEVICES to True/False will
 # either create IoT Devices or not
-CREATE_IOT_DEVICES = True
+CREATE_IOT_DEVICES = False
 
 # Setting CREATE_IOT_DEVICES to True/False will
 # either create a serverless app or not
-CREATE_SERVERLESS_APP = True
+CREATE_SERVERLESS_APP = False
 
 # If you have a list of device identifiers, you can pass these in as a filer
 #   in the following format:
@@ -176,19 +181,66 @@ def create_func_app():
         f' --sku Standard_LRS'
     )
 
-    direct_output = az_cli(
+    az_cli(
         f'functionapp create --resource-group {RESOURCE_GROUP_NAME}'
         f' --os-type Linux'
         f' --consumption-plan-location {FUNCTION_APP_LOCATION}'
         f' --runtime python --runtime-version 3.7 --functions-version 2'
         f' --name {FUNCTION_APP_NAME}'
         f' --storage-account {STORAGE_ACCT_NAME}')
+
     print('Sleeping for ten seconds to allow cloud resources to provision...')
     time.sleep(10)
-    os.system(f'func azure functionapp publish {FUNCTION_APP_NAME} --python')
-    # TODO: get function secrets via REST API
-    # https://bit.ly/3d9Yk0A
-    # TODO: Follow the official code guidelines:
-    # https://azure.github.io/azure-sdk/python_introduction.html
+    print('Deploying function to Azure...')
+    os.system(f'func azure functionapp publish {FUNCTION_APP_NAME}')
 
-create_func_app()
+
+# create_func_app()
+
+# TODO: store the output in a pickle
+# The az_cli command wasn't working so revert to os.system
+# and store output in a json file
+# TODO: make this a Path object and be careful; use full paths
+# os.chdir('../')
+# os.system(
+#     f'az ad sp create-for-rbac --sdk-auth'
+#     f' --name {RBAC_SERVICE_PRINCIPAL_NAME} > local-sp.json')
+
+with open('local-sp.json') as json_file:
+    result = json.load(json_file)
+
+SUBSCRIPTION_ID = result['subscriptionId']
+TENANT_ID = result['tenantId']
+CLIENT_ID = result['clientId']
+CLIENT_SECRET = result['clientSecret']
+RESOURCE = 'https://management.azure.com'
+
+auth_body = {'grant_type': 'client_credentials',
+             'client_id': CLIENT_ID,
+             'client_secret': CLIENT_SECRET,
+             'resource': RESOURCE, }
+
+print("Waiting for RBAC access to complete...")
+# time.sleep(5)
+
+response = requests.post(
+        f'https://login.microsoftonline.com/{TENANT_ID}/oauth2/token',
+        data=auth_body)
+
+aad_token = response.json()['access_token']
+
+# start with 0
+for device_id in IOT_DEVICE_NAMES:
+    r = requests.post(
+            f'https://management.azure.com/subscriptions/{SUBSCRIPTION_ID}'
+            f'/resourceGroups/{RESOURCE_GROUP_NAME}'
+            f'/providers/Microsoft.Web/sites/{FUNCTION_APP_NAME}'
+            f'/functions/{device_id}/listKeys?api-version=2018-02-01',
+            headers={'Authorization': f'Bearer {aad_token}'})
+    print(r.json()['default'])
+# r = requests.get(
+#     f'https://management.azure.com/subscriptions/{SUBSCRIPTION_ID}'
+#     f'/resourceGroups/{RESOURCE_GROUP_NAME}'
+#     f'/providers/Microsoft.Web/sites/{FUNCTION_APP_NAME}'
+#     f'/functions?api-version=2019-08-01',
+#     headers={'Authorization': f'Bearer {aad_token}'})
