@@ -230,14 +230,20 @@ response = requests.post(
 aad_token = response.json()['access_token']
 
 # start with 0
-for device_id in IOT_DEVICE_NAMES:
-    r = requests.post(
-            f'https://management.azure.com/subscriptions/{SUBSCRIPTION_ID}'
-            f'/resourceGroups/{RESOURCE_GROUP_NAME}'
-            f'/providers/Microsoft.Web/sites/{FUNCTION_APP_NAME}'
-            f'/functions/{device_id}/listKeys?api-version=2018-02-01',
-            headers={'Authorization': f'Bearer {aad_token}'})
-    print(r.json()['default'])
+
+with open('device_function_urls.csv', 'w', newline='') as csvfiles:
+    writer = csv.writer(csvfiles)
+    for device_id in IOT_DEVICE_NAMES:
+        r = requests.post(
+                f'https://management.azure.com/subscriptions/{SUBSCRIPTION_ID}'
+                f'/resourceGroups/{RESOURCE_GROUP_NAME}'
+                f'/providers/Microsoft.Web/sites/{FUNCTION_APP_NAME}'
+                f'/functions/{device_id}/listKeys?api-version=2018-02-01',
+                headers={'Authorization': f'Bearer {aad_token}'})
+        code = r.json()['default']
+        url = f'https://{FUNCTION_APP_NAME}.azurewebsites.net/api' \
+              f'/{device_id}?code={code}'
+        writer.writerow([device_id, url])
 # r = requests.get(
 #     f'https://management.azure.com/subscriptions/{SUBSCRIPTION_ID}'
 #     f'/resourceGroups/{RESOURCE_GROUP_NAME}'
