@@ -155,3 +155,4 @@ local.settings.json
 *.pickle
 azure_iot_hub/python-sdk/.vscode/settings.json
 
+azure_iot_hub/python-sdk/host.json
