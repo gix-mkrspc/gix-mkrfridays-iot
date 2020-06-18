@@ -39,6 +39,11 @@ except (OSError, IOError) as e:
     pickle.dump(IOT_HUB_NAME, open("IOT_pickle.pickle", "wb"))
     print("IOT_HUB_NAME DNE, created new names: " + IOT_HUB_NAME)
 
+# TODO: store in a pickle
+# The name of the serverless app which holds the functions
+# Should be globally unique
+SERVERLESS_APP_NAME = "porg-app"
+
 # Setting CREATE_IOT_HUB to True/False will either create an IOT HUB or not.
 # If you set it to false it will use the IOT_HUB_NAME variable
 #  to assume that the hub exists
@@ -48,13 +53,17 @@ CREATE_IOT_HUB = False
 # either create IoT Devices or not
 CREATE_IOT_DEVICES = False
 
+# Setting CREATE_IOT_DEVICES to True/False will
+# either create a serverless app or not
+CREATE_SERVERLESS_APP = False
+
 # If you have a list of device identifiers, you can pass these in as a filer
 #   in the following format:
 #   device_id1
 #   device_id2
 #   ...etc
 # Otherwise, devices will be created with random identifiers. All identifiers
-# and connection strings will be stored in a file called 
+# and connection strings will be stored in a file called
 # device_connection_strings.csv
 
 # TODO: this should be implemented and tested
@@ -128,3 +137,28 @@ if CREATE_IOT_DEVICES:
                 f"iot hub device-identity show-connection-string"
                 f" -d {device_name} -n {IOT_HUB_NAME}")
             writer.writerow([device_name, direct_output["connectionString"]])
+
+
+def create_func_app():
+    if CREATE_SERVERLESS_APP:
+        os.system(f'func init {SERVERLESS_APP_NAME} --python')
+        os.chdir(SERVERLESS_APP_NAME)
+        print(os.getcwd())
+    else:
+        # change to the dir so we can create functions
+        os.chdir(SERVERLESS_APP_NAME)
+    # TODO: fix this for Windows using the Path lib
+    with open('../device_connection_strings.csv', 'r', newline='') as csvfile:
+        reader = csv.reader(csvfile)
+        for row in reader:
+            # set the device name as the func name
+            os.system(f'func new --name {row[0]} --template "HTTP trigger"')
+    # TODO: actual deployment of the function app
+    # requires creating a storage group (globally unique)
+    # az functionapp create --resource-group AzureFunctionsQuickstart-rg
+    #  --os-type Linux --consumption-plan-location westeurope --runtime python
+    #  --runtime-version 3.7 --functions-version 2 --name <APP_NAME>
+    #  --storage-account <STORAGE_NAME>
+    # func azure functionapp publish <APP_NAME>
+
+create_func_app()
