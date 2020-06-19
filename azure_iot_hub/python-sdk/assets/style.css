@@ -14,8 +14,9 @@
     width:100%;
   }
   
-  #img{
-    height:250px;
+  img {
+    width: 100%;
+    height: auto;
   }
   
   #title {
