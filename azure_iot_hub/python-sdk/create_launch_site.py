@@ -1,8 +1,11 @@
 from yattag import Doc
-
+import csv
 
 doc, tag, text = Doc().tagtext()
 
+FILE_PATH = 'device_function_urls.csv'
+
+# HTML markup variables
 TITLE = "GIX IoT Hub"
 PORG_IMG = "https://images-na." \
            "ssl-images-amazon.com/images/I/917jytDQwJL" \
@@ -53,7 +56,14 @@ with tag('html', lang="en"):
         with tag('h1'):
             text(TITLE)
         with tag('div', klass='row'):
-            create_card("Chuck", "Super Porg", "https://example.com", PORG_IMG)
+            with open(FILE_PATH, 'r', newline='') as csvfile:
+                reader = csv.reader(csvfile) 
+                for row in reader:
+                    create_card(
+                        device_name=row[0],
+                        device_type="Super Porg",
+                        url=row[1],
+                        img=PORG_IMG)
 
 doc.asis('<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>')
 doc.asis('<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>')
