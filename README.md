@@ -129,9 +129,10 @@ Download script.py
 ### ESP8266
 1. Install ESP8266 board into Arduino IDE
     - Start Arduino IDE and go to File > Preferences
-    - In the 'Additional Board Manager URLs:' field, enter http://arduino.esp8266.com/stable/package_esp8266com_index.json. You can add multiple URLs, separating them with commas.
+    - In the 'Additional Board Manager URLs:' field, enter <mark>http://arduino.esp8266.com/stable/package_esp8266com_index.json</mark>
+      You can add multiple URLs, separating them with commas.
     - Go to Tools > Board and open 'Boards Manager'. Search for esp8266 and install esp8266 version 2.5.2 or later.
-    - Select your ESP8266 board from Tooks > Board menu aafter installation.
+    - Select your ESP8266 board from Tools > Board menu aafter installation.
 2. Open the iothub_ll_telemetry_sample_forked folder that was downloaded.
 3. Open iot_configs.h and update WiFi SSID and Password.
     - Make sure you are using a WiFi network that does not require additional manual steps after connection, such as opening a web browser.
