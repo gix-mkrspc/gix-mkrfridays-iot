@@ -240,6 +240,9 @@ response = requests.post(
 aad_token = response.json()['access_token']
 
 # TODO: catch keyerrors and write messages
+# Change to upper folder after deploying function...
+if CREATE_SERVERLESS_APP:
+    os.chdir('../')
 with open('device_function_urls.csv', 'w', newline='') as csvfiles:
     writer = csv.writer(csvfiles)
     for device_id in IOT_DEVICE_NAMES:
