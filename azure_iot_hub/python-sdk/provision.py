@@ -135,6 +135,8 @@ if CREATE_IOT_HUB:
         f" --resource-group {RESOURCE_GROUP_NAME}"
         f" --sku {IOT_HUB_SKU} --verbose"
         f" --partition-count {IOT_HUB_PARTITION_COUNT}")
+    print("Finishing hub creation")
+    time.sleep(10)
 
 # TODO: have an option for whether the user is providing
 #  a file with strings on each line
