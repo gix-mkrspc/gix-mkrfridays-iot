@@ -127,6 +127,7 @@ Download script.py
 
 ## Instructions for setup
 ### ESP8266
+-gitclone/download
 1. Install ESP8266 board into Arduino IDE
     - Start Arduino IDE and go to File > Preferences
     - In the 'Additional Board Manager URLs:' field, enter `http://arduino.esp8266.com/stable/package_esp8266com_index.json`  
