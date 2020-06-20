@@ -70,16 +70,18 @@ def confirm_overwrite(file_path):
 
 
 def main():
-    prompt = "This script will attempt to automatically update" \
-             " your ESP8266 board files to work with Azure IoT Hub" \
-             " for the repo https://github.com/Azure/azure-iot-arduino" \
-             "\nPlease refer to the license agreement there." \
-             "\nThis script will update all installed versions of board" \
-             " libraries for ESP8266." \
-             "\nDo you wish to proceed? Please answer Y or N:" \
-             " "
+    disclaimer_prompt = \
+        "This script will attempt to automatically update" \
+        " your ESP8266 and/or ESP32 board files to work with Azure IoT Hub" \
+        " for the repo https://github.com/Azure/azure-iot-arduino" \
+        "\nPlease refer to the license agreement there." \
+        "\nThis script will update all installed versions of board" \
+        " libraries for ESP8266." \
+        "\nDo you wish to proceed? Please answer Y or N:" \
+        " "
+
     while True:
-        response = input(prompt)
+        response = input(disclaimer_prompt)
         response = response.lower()
         if response == 'n':
             print("No changes made... exiting")
@@ -89,6 +91,26 @@ def main():
             break
         else:
             print("Ensure your response is a Y or N")
+
+    board_prompt = \
+        "Would you like to update your ESP8266 or ESP32 board files?" \
+        " For ESP8266 please respond 8266\n" \
+        " For ESP32 please respond 32\n" \
+        " Which board files would you like to update:" \
+        " "
+
+    board_to_update = ""
+    while True:
+        response = input(board_prompt)
+        response = response.lower()
+        if response == '8266':
+            board_to_update = '8266'
+            break
+        elif response == '32':
+            board_to_update = '32'
+            break
+        else:
+            print("Ensure your response is either 8226 or 32")
 
     if sys.platform == "darwin":
         ARDUINO_PACKAGES_PATH = Path(Path.home() / "Library/Arduino15")
@@ -103,7 +125,7 @@ def main():
               f" {sys.platform}")
         sys.exit()
 
-    print(f"Arduino board path for platform {sys.platform} is:"
+    print(f"Arduino path for platform {sys.platform} is:"
           f" {ARDUINO_PACKAGES_PATH}")
 
     # Check for and change other versions if they exist
