@@ -3,6 +3,7 @@ antlr4-python3-runtime==4.7.2
 applicationinsights==0.11.9
 argcomplete==1.11.1
 astroid==2.4.1
+autopep8==1.5.3
 azure-batch==9.0.0
 azure-cli==2.6.0
 azure-cli-command-modules-nspkg==2.0.3
