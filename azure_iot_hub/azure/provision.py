@@ -3,6 +3,7 @@ from azure.mgmt.resource import ResourceManagementClient
 from azure.cli.core import get_default_cli
 
 import os
+import sys
 import random
 import subprocess
 import json
@@ -10,6 +11,8 @@ import csv
 import pickle
 import time
 import requests
+import fileinput
+import shutil
 
 # TODO: Follow the official code guidelines:
 # https://azure.github.io/azure-sdk/python_introduction.html
@@ -164,6 +167,43 @@ if CREATE_IOT_DEVICES:
             writer.writerow([device_name, direct_output["connectionString"]])
 
 
+def update_line_file(
+        file_path, str_line_to_update, str_replacement, comment_only=False,
+        comment_str=None):
+    '''
+    Updates a line on a file with a replacement line or comments it out
+
+    :param file_path: The path to the file
+    :type file_path: str
+    :param str_to_update: The string which will be replaced
+    :type str_to_update str:
+    :param str_replacement: The string which replace the line of str_to_update
+    :type str_replacement str:
+    :param comment_only: Determines whether to replace or only comment out a
+    line
+    :type comment_only boolean:
+    :param comment_str: Str to use for a comment if commenting
+    :type comment_only str:
+    :raises: :class:`FileNotFound`: File couldn't be opened
+
+    :returns: whether the string was replaced in the file or it was commented
+    out
+    :rtype: boolean
+    '''
+    file_modified = False
+    for line in fileinput.input(file_path, inplace=True):
+        if line.startswith(str_line_to_update):
+            if comment_only:
+                line = f"{comment_str} {line}"
+                file_modified = True
+            elif line.rstrip() != str_replacement:
+                line = f"{str_replacement}\n"
+                file_modified = True
+        sys.stdout.write(line)
+
+    return file_modified
+
+
 def create_func_app():
     if CREATE_SERVERLESS_APP:
         print("Creating serverless app")
@@ -193,23 +233,40 @@ def create_func_app():
     # TODO: fix this for Windows using the Path lib
     if CREATE_FUNCTIONS:
         print("Creating functions")
+        # overwrite the generated requirements.txt
+        shutil.copyfile(
+            '../templates/requirements.txt',
+            './requirements.txt'
+        )
         # grab the service connection string
         c2d_connection_string = az_cli(
             f'iot hub show-connection-string'
             f' --name {IOT_HUB_NAME} --policy-name service'
         )
-        c2d_connection_string = c2d_connection_string['connectionString']
-        print(c2d_connection_string)
+        # TODO: get the type of device to copy from the list of names here
+        # Or just set the type of device to copy
         with open(
                 '../device_connection_strings.csv', 'r', newline='') \
                 as csvfile:
             reader = csv.reader(csvfile)
             for row in reader:
                 # set the device name as the func name
-                os.system(
-                    f'func new --name {row[0]}'
-                    f' --template "HTTP trigger"')
-            time.sleep(10)
+                device_id = row[0]
+                shutil.copytree(
+                    f'../templates/led_matrix_esp32_iot_hub',
+                    f'./{device_id}')
+                update_line_file(
+                    f'./{device_id}/__init__.py',
+                    f'CONNECTION_STRING = ',
+                    f"CONNECTION_STRING ="
+                    f" '{c2d_connection_string['connectionString']}'"
+                )
+                update_line_file(
+                    f'./{device_id}/__init__.py',
+                    f'DEVICE_ID = ',
+                    f"DEVICE_ID = '{device_id}'"
+                )
+        time.sleep(10)
 
     print('Deploying function to Azure...')
     os.system(f'func azure functionapp publish {FUNCTION_APP_NAME}')
