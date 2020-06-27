@@ -153,12 +153,11 @@ local.settings.json
 # Custom
 *.csv
 *.pickle
-azure_iot_hub/python-sdk/.vscode/settings.json
-
-azure_iot_hub/python-sdk/host.json
+settings.json
+host.json
 
 azure-functions-core-tools/
 local-sp.json
 porg-app*/
-azure_iot_hub/python-sdk/IoT_device_name.txt
+IoT_device_name.txt
 launch.json
