@@ -167,6 +167,7 @@ if CREATE_IOT_DEVICES:
 def create_func_app():
     if CREATE_SERVERLESS_APP:
         print("Creating serverless app")
+        print("Creating storage account")
         os.system(f'func init {FUNCTION_APP_NAME} --python')
         os.chdir(FUNCTION_APP_NAME)
         az_cli(
@@ -175,6 +176,7 @@ def create_func_app():
             f' --resource-group {RESOURCE_GROUP_NAME}'
             f' --sku Standard_LRS'
         )
+        print("Storage account created; now creating function app")
         az_cli(
             f'functionapp create --resource-group {RESOURCE_GROUP_NAME}'
             f' --os-type Linux'
@@ -191,6 +193,13 @@ def create_func_app():
     # TODO: fix this for Windows using the Path lib
     if CREATE_FUNCTIONS:
         print("Creating functions")
+        # grab the service connection string
+        c2d_connection_string = az_cli(
+            f'iot hub show-connection-string'
+            f' --name {IOT_HUB_NAME} --policy-name service'
+        )
+        c2d_connection_string = c2d_connection_string['connectionString']
+        print(c2d_connection_string)
         with open(
                 '../device_connection_strings.csv', 'r', newline='') \
                 as csvfile:
@@ -200,20 +209,21 @@ def create_func_app():
                 os.system(
                     f'func new --name {row[0]}'
                     f' --template "HTTP trigger"')
+            time.sleep(10)
 
     print('Deploying function to Azure...')
-    print(os.getcwd())
     os.system(f'func azure functionapp publish {FUNCTION_APP_NAME}')
+    os.chdir('../')
 
 
 create_func_app()
+
 
 # TODO: store the output in a pickle
 # The az_cli command wasn't working so revert to os.system
 # and store output in a json file
 # TODO: make this a Path object and be careful; use full paths
 # TODO: check if it exists here first
-
 # Create/fetch RBAC and request an OAuth token
 if CREATE_RBAC_SP:
     os.system(
@@ -221,6 +231,7 @@ if CREATE_RBAC_SP:
         f' --name {RBAC_SERVICE_PRINCIPAL_NAME} > local-sp.json')
     print("Waiting a minute for RBAC to finish updating...")
     time.sleep(60)
+
 
 with open('local-sp.json') as json_file:
     result = json.load(json_file)
@@ -240,9 +251,6 @@ response = requests.post(
 aad_token = response.json()['access_token']
 
 # TODO: catch keyerrors and write messages
-# Change to upper folder after deploying function...
-if CREATE_SERVERLESS_APP:
-    os.chdir('../')
 with open('device_function_urls.csv', 'w', newline='') as csvfiles:
     writer = csv.writer(csvfiles)
     for device_id in IOT_DEVICE_NAMES:
