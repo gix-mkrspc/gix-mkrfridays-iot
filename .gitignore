@@ -161,3 +161,4 @@ azure-functions-core-tools/
 local-sp.json
 porg-app*/
 azure_iot_hub/python-sdk/IoT_device_name.txt
+launch.json
