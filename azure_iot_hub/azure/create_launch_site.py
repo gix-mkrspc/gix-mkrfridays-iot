@@ -12,6 +12,7 @@ PORG_IMG = "https://images-na." \
            "ssl-images-amazon.com/images/I/917jytDQwJL" \
            "._AC_SL1500_.jpg"
 
+
 def create_card(device_name, device_type, url, img):
     with tag('div', klass='col-md'):
         with tag('div', klass='col card'):
@@ -28,7 +29,8 @@ def create_card(device_name, device_type, url, img):
                             'button',
                             klass='btn btn-primary',
                             id='activatebutton',
-                            onclick=f"window.location.href='{url}'"):
+                            onclick=f"invokeDevice('{device_name}'"
+                                    f",'{url}')"):
                         text(f"Activate {device_type}")
 
 
@@ -47,6 +49,8 @@ with tag('html', lang="en"):
         crossorigin="anonymous",
         integrity="sha384-"
         "Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm")
+    doc.asis('<script src="bootstrap-alerts.js"></script>')
+    doc.asis('<script src="deviceScripts.js"></script>')
     doc.stag(
         'link',
         rel='stylesheet',
@@ -66,6 +70,7 @@ with tag('html', lang="en"):
                             device_type="Super Porg",
                             url=row[1],
                             img=PORG_IMG)
+
 
 doc.asis(
     '<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"'
