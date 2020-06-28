@@ -322,3 +322,22 @@ with open('device_function_urls.csv', 'w', newline='') as csvfiles:
               f'/{device_id}?code={code}'
         writer.writerow([device_id, url])
     print("Successfully wrote device function URLs")
+
+# Create static site on Azure
+az_cli(
+    f'storage blob service-properties update'
+    f' --account-name {STORAGE_ACCT_NAME} --static-website'
+    f' --404-document error.html --index-document index.html')
+
+# TODO: convert to path
+# Upload files
+az_cli(
+    f"storage blob upload-batch"
+    f" -s generated_site -d $web"
+    f" --account-name {STORAGE_ACCT_NAME}")
+
+# Get URL
+endpoints = az_cli(
+    f'storage account show -n {STORAGE_ACCT_NAME}'
+    f' -g {RESOURCE_GROUP_NAME} --query "primaryEndpoints"')
+print(f"Please view dashboard at: {endpoints['web']}")
