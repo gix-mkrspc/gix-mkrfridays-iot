@@ -79,9 +79,15 @@ CREATE_SERVERLESS_APP = True
 # existing (in this dir) named serverless app
 CREATE_FUNCTIONS = True
 
+# Determines whether to fetch function URL api keys
+WRITE_FUNCTION_URLS = True
+
 # Needed to access Azure REST API; if you have
-#  local-sp.json in this dir it can be set to True
+#  local-sp.json in this dir you don't need to run this
 CREATE_RBAC_SP = True
+
+# Determines whether to create a static site dashboard
+CREATE_STATIC_SITE = True
 
 # If you have a list of device identifiers, you can pass these in as a filer
 #   in the following format:
@@ -273,7 +279,8 @@ def create_func_app():
     os.chdir('../')
 
 
-create_func_app()
+if CREATE_SERVERLESS_APP or CREATE_FUNCTIONS:
+    create_func_app()
 
 
 # TODO: store the output in a pickle
@@ -289,55 +296,56 @@ if CREATE_RBAC_SP:
     print("Waiting a minute for RBAC to finish updating...")
     time.sleep(60)
 
+if WRITE_FUNCTION_URLS:
+    with open('local-sp.json') as json_file:
+        result = json.load(json_file)
 
-with open('local-sp.json') as json_file:
-    result = json.load(json_file)
+    SUBSCRIPTION_ID = result['subscriptionId']
+    TENANT_ID = result['tenantId']
+    CLIENT_ID = result['clientId']
+    CLIENT_SECRET = result['clientSecret']
+    RESOURCE = 'https://management.azure.com'
+    auth_body = {'grant_type': 'client_credentials',
+                'client_id': CLIENT_ID,
+                'client_secret': CLIENT_SECRET,
+                'resource': RESOURCE, }
+    response = requests.post(
+            f'https://login.microsoftonline.com/{TENANT_ID}/oauth2/token',
+            data=auth_body)
+    aad_token = response.json()['access_token']
 
-SUBSCRIPTION_ID = result['subscriptionId']
-TENANT_ID = result['tenantId']
-CLIENT_ID = result['clientId']
-CLIENT_SECRET = result['clientSecret']
-RESOURCE = 'https://management.azure.com'
-auth_body = {'grant_type': 'client_credentials',
-             'client_id': CLIENT_ID,
-             'client_secret': CLIENT_SECRET,
-             'resource': RESOURCE, }
-response = requests.post(
-        f'https://login.microsoftonline.com/{TENANT_ID}/oauth2/token',
-        data=auth_body)
-aad_token = response.json()['access_token']
+    # TODO: catch keyerrors and write messages
+    with open('device_function_urls.csv', 'w', newline='') as csvfiles:
+        writer = csv.writer(csvfiles)
+        for device_id in IOT_DEVICE_NAMES:
+            r = requests.post(
+                    f'https://management.azure.com/subscriptions/{SUBSCRIPTION_ID}'
+                    f'/resourceGroups/{RESOURCE_GROUP_NAME}'
+                    f'/providers/Microsoft.Web/sites/{FUNCTION_APP_NAME}'
+                    f'/functions/{device_id}/listKeys?api-version=2018-02-01',
+                    headers={'Authorization': f'Bearer {aad_token}'})
+            code = r.json()['default']
+            url = f'https://{FUNCTION_APP_NAME}.azurewebsites.net/api' \
+                f'/{device_id}?code={code}'
+            writer.writerow([device_id, url])
+        print("Successfully wrote device function URLs")
 
-# TODO: catch keyerrors and write messages
-with open('device_function_urls.csv', 'w', newline='') as csvfiles:
-    writer = csv.writer(csvfiles)
-    for device_id in IOT_DEVICE_NAMES:
-        r = requests.post(
-                f'https://management.azure.com/subscriptions/{SUBSCRIPTION_ID}'
-                f'/resourceGroups/{RESOURCE_GROUP_NAME}'
-                f'/providers/Microsoft.Web/sites/{FUNCTION_APP_NAME}'
-                f'/functions/{device_id}/listKeys?api-version=2018-02-01',
-                headers={'Authorization': f'Bearer {aad_token}'})
-        code = r.json()['default']
-        url = f'https://{FUNCTION_APP_NAME}.azurewebsites.net/api' \
-              f'/{device_id}?code={code}'
-        writer.writerow([device_id, url])
-    print("Successfully wrote device function URLs")
 
-# Create static site on Azure
-az_cli(
-    f'storage blob service-properties update'
-    f' --account-name {STORAGE_ACCT_NAME} --static-website'
-    f' --404-document error.html --index-document index.html')
+if CREATE_STATIC_SITE:
+    # Create static site on Azure
+    az_cli(
+        f'storage blob service-properties update'
+        f' --account-name {STORAGE_ACCT_NAME} --static-website'
+        f' --index-document index.html')
 
-# TODO: convert to path
-# Upload files
-az_cli(
-    f"storage blob upload-batch"
-    f" -s generated_site -d $web"
-    f" --account-name {STORAGE_ACCT_NAME}")
+    # Upload files from generated_site folder
+    az_cli(
+        f"storage blob upload-batch"
+        f" -s generated_site -d $web"
+        f" --account-name {STORAGE_ACCT_NAME}")
 
-# Get URL
-endpoints = az_cli(
-    f'storage account show -n {STORAGE_ACCT_NAME}'
-    f' -g {RESOURCE_GROUP_NAME} --query "primaryEndpoints"')
-print(f"Please view dashboard at: {endpoints['web']}")
+    # Get URL
+    endpoints = az_cli(
+        f'storage account show -n {STORAGE_ACCT_NAME}'
+        f' -g {RESOURCE_GROUP_NAME} --query "primaryEndpoints"')
+    print(f"Please view dashboard at: {endpoints['web']}")
