@@ -1,0 +1,26 @@
+.card{
+    border: 1px black solid;
+  }
+  
+  body html {
+    width:100%;
+  }
+  
+  .button {
+    text-align: center;
+    margin: 1rem;
+  }
+  
+  #activatebutton{
+    width:100%;
+  }
+  
+  img {
+    width: 100%;
+    height: auto;
+  }
+  
+  h1 {
+    text-align:center;
+    margin: 1rem;
+  }
