@@ -8,9 +8,24 @@ function invokeDevice(name, url) {
     ba.setBackground('success'); // set the alert to a success one
     if(msg){
         document.getElementById(`text_${name}`).value = '';
-        ba.addH(3, `Success! The device "${name}" will be invoked with this message: ${msg}`); // create a heading 1 tag
+        sendWebRequest("GET",`${url}&msg=${msg}`);
+        ba.addH(3, `Success! The device "${name}" is being invoked with this message: ${msg}`); // create a heading 1 tag
     } else {
-        ba.addH(3, `Success! The device "${name}" will be invoked.`); // create a heading 1 tag
+        ba.addH(3, `Success! The device "${name}" is being invoked.`); // create a heading 1 tag
     }
     document.getElementsByTagName('h1')[0].appendChild(ba.render());
+}
+
+function sendWebRequest(method,url){
+    var xmlhttp = new XMLHttpRequest();
+
+    xmlhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            var myArr = JSON.parse(this.responseText);
+            myFunction(myArr);
+        }
+    };
+    xmlhttp.open(method, url, true);
+    xmlhttp.send();
+    console.log('sent!');
 }
