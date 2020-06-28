@@ -59,28 +59,28 @@ FUNCTION_APP_NAME = f"porg-app2"
 # find locations with az functionapp list-consumption-locations
 FUNCTION_APP_LOCATION = "westus"
 
+# TODO: store this in a pickle
 # Must be <= 24 chars and alphanumeric only
 STORAGE_ACCT_NAME = f"storage{random.randint(1,100000):05}"
 STORAGE_ACCT_LOCATION = "westus"
 
-# Setting CREATE_IOT_HUB to True/False will either create an IOT HUB or not.
-# If you set it to false it will use the IOT_HUB_NAME variable
-#  to assume that the hub exists
+# Determines whether to create an IoT Hub
+# Looks for existing IoT Hub name in pickle if not created
 CREATE_IOT_HUB = True
 
-# Setting CREATE_IOT_DEVICES to True/False will
-# either create IoT Devices or not
+# Determines whether to create or use existing IoT Devices
+# Looks for existing devices in device_connection_strings.csv
 CREATE_IOT_DEVICES = True
 
-# Setting CREATE_SERVERLESS_APP to True/False will
-# either create a serverless app or not
+# Determines whether to create serverless app
 CREATE_SERVERLESS_APP = True
 
-# Setting CREATE_FUNCTIONS to True/False will
-# determine whether to use device list
-# to create functions inside a serverless app or not
+# Determines whether to create functions inside
+# existing (in this dir) named serverless app
 CREATE_FUNCTIONS = True
 
+# Needed to access Azure REST API; if you have
+#  local-sp.json in this dir it can be set to True
 CREATE_RBAC_SP = True
 
 # If you have a list of device identifiers, you can pass these in as a filer
