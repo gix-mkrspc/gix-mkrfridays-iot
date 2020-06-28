@@ -39,14 +39,25 @@ RESOURCE_GROUP_LOCATION = "West US"
 
 RBAC_SERVICE_PRINCIPAL_NAME = "iotporgpython3"
 
-# NOTE: IOT_HUB_NAME must be unique globally across Azure
+
+# NOTE: IOT_HUB_NAME must be unique withing your resouroce group
 try:
-    IOT_HUB_NAME = pickle.load(open("IOT_pickle.pickle", "rb"))
+    IOT_RESOURCES = pickle.load(open("resource_state.pickle", "rb"))
+    IOT_HUB_NAME = IOT_RESOURCES['IOT_HUB_NAME']
+    STORAGE_ACCT_NAME = IOT_RESOURCES['STORAGE_ACCT_NAME']
     print(f"IOT_HUB_NAME received: {IOT_HUB_NAME}")
+    print(f"STORAGE_ACCT_NAME received: {STORAGE_ACCT_NAME}")
 except (OSError, IOError) as e:
+    IOT_RESOURCES = {}
     IOT_HUB_NAME = f"{RESOURCE_GROUP_NAME}-{random.randint(1,100000):05}"
-    pickle.dump(IOT_HUB_NAME, open("IOT_pickle.pickle", "wb"))
+    IOT_RESOURCES['IOT_HUB_NAME'] = IOT_HUB_NAME
     print(f"IOT_HUB_NAME doesn't exist, created: {IOT_HUB_NAME}")
+    # Must be <= 24 chars and alphanumeric only
+    STORAGE_ACCT_NAME = f"storage{random.randint(1,100000):05}"
+    IOT_RESOURCES['STORAGE_ACCT_NAME'] = STORAGE_ACCT_NAME
+    print(f"STORAGE_ACCT_NAME doesn't exist, created: {STORAGE_ACCT_NAME}")
+    pickle.dump(IOT_RESOURCES, open("resource_state.pickle", "wb"))
+
 
 # TODO: store in a pickle
 # The name of the serverless app which holds the functions
@@ -59,9 +70,6 @@ FUNCTION_APP_NAME = f"porg-app2"
 # find locations with az functionapp list-consumption-locations
 FUNCTION_APP_LOCATION = "westus"
 
-# TODO: store this in a pickle
-# Must be <= 24 chars and alphanumeric only
-STORAGE_ACCT_NAME = f"storage{random.randint(1,100000):05}"
 STORAGE_ACCT_LOCATION = "westus"
 
 # Determines whether to create an IoT Hub
