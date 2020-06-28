@@ -1,5 +1,6 @@
 from yattag import Doc
 import csv
+import os
 
 doc, tag, text = Doc().tagtext()
 
@@ -10,7 +11,6 @@ TITLE = "GIX IoT Hub"
 PORG_IMG = "https://images-na." \
            "ssl-images-amazon.com/images/I/917jytDQwJL" \
            "._AC_SL1500_.jpg"
-
 
 def create_card(device_name, device_type, url, img):
     with tag('div', klass='col-md'):
@@ -82,7 +82,10 @@ doc.asis(
     '</script>')
 print(doc.getvalue())
 
+if not os.path.exists('generated_site'):
+    os.mkdir('generated_site')
+
 # TODO: use Path lib
-with open("index.html", 'w') as html_file:
+with open("./generated_site/index.html", 'w') as html_file:
     # with open("./assets/generated_site/index.html", 'w') as html_file:
     html_file.write(doc.getvalue())
