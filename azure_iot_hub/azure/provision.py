@@ -340,6 +340,11 @@ if WRITE_FUNCTION_URLS:
 
 
 if CREATE_STATIC_SITE:
+        # Generate site
+    # TODO: this needs to be tested for cross platform
+    os.system('python create_launch_site.py')
+    print('Generating static site for dashboard...')
+    time.sleep(10)
     # Create static site on Azure
     az_cli(
         f'storage blob service-properties update'
