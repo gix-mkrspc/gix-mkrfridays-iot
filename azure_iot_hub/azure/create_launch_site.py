@@ -25,13 +25,19 @@ def create_card(device_name, device_type, url, img):
                     text(f'Type: {device_type}')
             with tag('div', klass='row'):
                 with tag('div', klass='col button'):
+                    if(device_type == "screen"):
+                        text(f"Send a message?")
+                        doc.stag(
+                            'input',
+                            type='text',
+                            id=f'text_{device_name}')
                     with tag(
                             'button',
                             klass='btn btn-primary',
                             id='activatebutton',
                             onclick=f"invokeDevice('{device_name}'"
                                     f",'{url}')"):
-                        text(f"Activate {device_type}")
+                        text(f"Activate {device_name}'s {device_type}")
 
 
 doc.asis('<!DOCTYPE html>')
@@ -67,7 +73,7 @@ with tag('html', lang="en"):
                     for row in reader:
                         create_card(
                             device_name=row[0],
-                            device_type="Super Porg",
+                            device_type="screen",
                             url=row[1],
                             img=PORG_IMG)
 
