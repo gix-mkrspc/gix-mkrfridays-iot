@@ -161,4 +161,4 @@ local-sp.json
 porg-app*/
 IoT_device_name.txt
 launch.json
-generated_site*
+**/generated_site/index.html
