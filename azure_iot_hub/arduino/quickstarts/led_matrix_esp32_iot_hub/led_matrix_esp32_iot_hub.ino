@@ -126,8 +126,35 @@ static IOTHUBMESSAGE_DISPOSITION_RESULT receive_message_callback(IOTHUB_MESSAGE_
         {
             g_continueRunning = false;
         } else {
-          String myString = String(buffer);
-          P.print(myString); 
+          String string= String(buffer);
+          // 75 chars max
+          char asciiOnly[75] = { "" };
+          int j = 0;
+          for(int i =0; i < strlen(buffer); i++ ) {
+            char c = string[i];
+            if (isAlphaNumeric(c) || isAscii(c) && isPrintable(c)){
+              //append to asciiOnly
+              // This is on the buffer and needs to be weeded out ¯\_(ツ)_/¯
+              if (c == 'x'){
+               char c2 = string[i+1];
+               if (c2 == 'V'){
+                break;
+               }
+              }
+              asciiOnly[j] = c;
+              j++;
+            }
+          }
+          textPosition_t scrollAlign = PA_LEFT;
+          uint8_t scrollSpeed = 100;    // default frame delay value
+          uint16_t scrollPause = 2000; // in milliseconds
+          textEffect_t scrollEffect = PA_SCROLL_LEFT;
+          P.displayText(asciiOnly, scrollAlign, scrollSpeed, scrollPause, scrollEffect, scrollEffect);
+          while(!P.displayAnimate())
+          {
+            
+          }
+          P.displayReset();
         }
     }
 
@@ -169,6 +196,7 @@ static void connection_status_callback(IOTHUB_CLIENT_CONNECTION_STATUS result, I
 void setup() {
   // Setup Parola
     P.begin();
+
     int result = 0;
 
     sample_init(ssid, pass);
@@ -279,6 +307,7 @@ void setup() {
 
 void loop(void)
 {
+
   
 #ifdef is_esp_board
     if (Serial.available()){
