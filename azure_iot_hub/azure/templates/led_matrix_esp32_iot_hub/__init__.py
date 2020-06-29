@@ -44,7 +44,7 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
         # TODO: this whitespace is to push some unicode chars off
         #  the screen; can be removed later when Arduino code is
         #  fixed
-        iothub_messaging_sample_run(msg + "         ")
+        iothub_messaging_sample_run(msg)
         return func.HttpResponse(
             f"Your text {msg} has been deployed to the"
             " device successfully!")
