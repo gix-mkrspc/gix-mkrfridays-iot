@@ -12,7 +12,8 @@ def update_line_file(
         file_path, str_line_to_update, str_append, comment_only=False,
         comment_str=None):
     '''
-    Updates a line on a file with a replacement line or comments it out
+    Updates a line on a file with a replacement (preserving the original line)
+    or comments it out
 
     :param file_path: The path to the file
     :type file_path: str
@@ -150,6 +151,7 @@ def main():
 
     for path in versions:
         if PACKAGE_PATH == ESP8266_PACKAGE_PATH:
+            # 8266 has specific files which 32 aren't required to change
             arduino_header_backup = Path(path / "cores/esp8266/Arduino.h.orig")
             if arduino_header_backup.exists():
                 confirm_overwrite(arduino_header_backup)
@@ -167,6 +169,9 @@ def main():
                     str_append=None, comment_only=True,
                     comment_str="//")
                 print(f"Updated: {get_update} for {arduino_header_file}")
+            else:
+                print(f"Could not find {arduino_header_file}")
+                sys.exit(1)
 
         platform_txt_backup = Path(path / "platform.txt.orig")
         if platform_txt_backup.exists():
@@ -186,6 +191,9 @@ def main():
                     platform_txt_file, "build.extra_flags=",
                     str_append=append_str)
             print(f"Updated: {get_update} for {platform_txt_file}")
+        else:
+            print(f"Could not find {platform_txt_file}")
+            sys.exit(1)
 
 
 main()
