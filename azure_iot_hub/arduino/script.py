@@ -183,8 +183,9 @@ def main():
             print(f"Backup created: {Path(path / 'platform.txt.orig')}")
             append_str = ""
             if PACKAGE_PATH == ESP8266_PACKAGE_PATH:
-                append_str = " -DDONT_USE_UPLOADTOBLOB"
-                " -DUSE_BALTIMORE_CERT"
+                # Ensure to include spaces for flags
+                append_str = " -DDONT_USE_UPLOADTOBLOB" \
+                             " -DUSE_BALTIMORE_CERT"
             elif PACKAGE_PATH == ESP32_PACKAGE_PATH:
                 append_str = " -DDONT_USE_UPLOADTOBLOB"
             get_update = update_line_file(
