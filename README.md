@@ -119,26 +119,57 @@ In order to customize the microcontroller, you have to re-flash the NodeMCU agai
 
 # Remote Control (via Azure IoT Hub)
 ## Prerequisites
-Currently supported hardware:
+### Hardware
+One of the following boards:
 - ESP8266 based boards with esp8266/arduino
-- ESP32 based boards with espressif/arduino-esp32
-Download azure_iot_hub folder with iothub_ll_telemetry_sample_forked
-Download script.py
+- ESP32 based boards with espressif/arduino-esp32  
+and a...
+- USB cable for data transfer or other flashing hardware
 
-## Instructions for setup
+### Software
+- [python3.5+](https://www.python.org/downloads/) Installed and accessible via your [PATH](https://www.tutorialspoint.com/python/python_environment.htm) environment variable
+- [git](https://git-scm.com)
+- [Arduino IDE](https://www.arduino.cc/en/main/software)
+
+## Setup Instructions
+If any of these steps fail please double check these instructions, open an issue [here](https://github.com/codycodes/gix-mkrfridays-iot/issues/new/choose), and see if there's a solution to the issue on the official [Azure IoT Arduino repo](https://github.com/Azure/azure-iot-arduino)
+
+
 ### ESP8266
--gitclone/download
-1. Install ESP8266 board into Arduino IDE
-    - Start Arduino IDE and go to File > Preferences
-    - In the 'Additional Board Manager URLs:' field, enter `http://arduino.esp8266.com/stable/package_esp8266com_index.json`  
-      You can add multiple URLs, separating them with commas.
-    - Go to Tools > Board and open 'Boards Manager'. Search for esp8266 and install esp8266 version 2.5.2 or later.
-    - Select your ESP8266 board from Tools > Board menu aafter installation.
-2. Open the iothub_ll_telemetry_sample_forked folder that was downloaded.
-3. Open iot_configs.h and update WiFi SSID and Password.
+#### Installing Azure IoT Arduino libs
+1. Open up the Arduino IDE and go to **Tools > Manage Libraries**
+    ![mng_lib](./assets/arduino/10.png)
+2. Install the following libraries through the Arduino IDE Library Manager:  
+  `AzureIoTHub`  
+  `AzureIoTUtility`  
+  `AzureIoTProtocol_MQTT`  
+  `AzureIoTProtocol_HTTP`  
+#### Install board into Arduino IDE
+ 1. (Windows) Start Arduino IDE and go to **File > Preferences**  
+    (macOS) Start Arduino IDE and go to **Arduino > Preferences**  
+ 2. In the *Additional Board Manager URLs:* field, enter `http://arduino.esp8266.com/stable/package_esp8266com_index.json`  
+   ![boards_url](./assets/arduino/1.png)
+   You can add multiple URLs for boards, separating each with a comma `,`
+ 3. Go to **Tools > Board: *currently selected board*** and open **Boards Manager**.  
+   ![boards_mgr](./assets/arduino/3.png)
+    - In **Boards Manager**, search for *esp8266* and install esp8266 version **2.5.2 or later**.
+     ![boards_mgr](./assets/arduino/5.png)
+ 4. Select your ESP8266 board from **Tools > Board: *currently selected board*** menu after installation. After selection, the menu should read **Tools > Board: "Generic ESP8266 Module"**:
+     ![boards_mgr](./assets/arduino/7.png)
+#### Finish board setup via python script
+ 1. Clone this repo using: 
+    
+    `git clone "https://github.com/codycodes/gix-mkrfridays-iot.git"`
+
+      - Note: if you already did this before you don't need to do it again! In that case skip to step 2.
+ 2. Open a terminal and `cd` to the directory you cloned the repo to. The path will be something like `/dir/to/clone/gix-mkrfridays-iot`, where `/dir/to/clone` is where you cloned the repo to.
+    - You will also want to fetch
+ 3. Open iot_configs.h and update WiFi SSID and Password.
     - Make sure you are using a WiFi network that does not require additional manual steps after connection, such as opening a web browser.
-4. Open and run 'script.py' which would automatically locate your board's Arduino.h and platform.txt and make changes to it.
-5. Run the sample.
+ 4. Open and run 'script.py' which would automatically locate your board's Arduino.h and platform.txt and make changes to it.
+#### Upload code to Arduino
+1. Choose the example you would like to run from *quickstarts* folder located in **gix-mkrfridays-iot/arduino/quickstarts**. Open the `.ino` file in the Arduino IDE (double-click it from your file explorer).
+2. Ensure that the correct serial port and board are selected.
+3. Plug the Arduino in. Run the sample by clicking upload.
 
 ### ESP32
-
