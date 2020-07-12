@@ -69,10 +69,6 @@ const char* telemetry_msg = "test_message";
 
 IOTHUB_DEVICE_CLIENT_LL_HANDLE device_ll_handle;
 
-#include <Servo.h>
-
-Servo servo;
-
 static int callbackCounter;
 int receiveContext = 0;
 
@@ -107,24 +103,15 @@ static IOTHUBMESSAGE_DISPOSITION_RESULT receive_message_callback(IOTHUB_MESSAGE_
         {
             g_continueRunning = false;
         }
-        if ((size == (strlen("servo") * sizeof(char)) && memcmp(buffer, "servo", size) == 0))
+        if ((size == (strlen("blink") * sizeof(char)) && memcmp(buffer, "blink", size) == 0))
         {
-        /* servo move on message received */ 
-        // LogInfo("SERVO ACTIVATED");
-        // *** SERVO ***
-        // servo.attach(2); //D4
-        // LogInfo("Servo setup");
-        // for (int i = 0; i < 2; i++) {
-        //     servo.write(0);
-        //     delay(1000);
-        //     servo.write(180);
-        //     delay(1000);
-        // }
-        // TODO: add Porg switch
-        LogInfo("PORG ACTIVATED");
-        digitalWrite(5, HIGH); // sets the digital pin 13 on
-        delay(1000); 
-        digitalWrite(5, LOW); // sets the digital pin 13 on
+        // Blink LED when "blink" received
+        for (int i = 0; i < 3; i++){
+            digitalWrite(2, HIGH);   // turn the LED on (HIGH is the voltage level)
+            delay(1000);
+            digitalWrite(2, LOW);    // turn the LED off by making the voltage LOW        
+            delay(1000);
+          }
         }
     }
 
@@ -166,8 +153,8 @@ static void connection_status_callback(IOTHUB_CLIENT_CONNECTION_STATUS result, I
 }
 
 void setup() {
-    // Porg switch:
-    pinMode(5, OUTPUT); // D1
+    // initialize digital pin 13 as an output.
+    pinMode(2, OUTPUT);
 
     int result = 0;
 
