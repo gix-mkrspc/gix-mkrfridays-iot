@@ -163,13 +163,19 @@ If any of these steps fail please double check these instructions, open an issue
 
       - Note: if you already did this before you don't need to do it again! In that case skip to step 2.
  2. Open a terminal and `cd` to the directory you cloned the repo to. The path will be something like `/dir/to/clone/gix-mkrfridays-iot`, where `/dir/to/clone` is where you cloned the repo to.
-    - You will also want to fetch
- 3. Open iot_configs.h and update WiFi SSID and Password.
-    - Make sure you are using a WiFi network that does not require additional manual steps after connection, such as opening a web browser.
- 4. Open and run 'script.py' which would automatically locate your board's Arduino.h and platform.txt and make changes to it.
+    - You will also want to fetch the `iot_configs.h` file from either the [Azure IoT GitHub repo](https://github.com/Azure/azure-iot-arduino/blob/master/examples/iothub_ll_telemetry_sample/iot_configs.h) or the Arduino samples folder:
+    ![example](./assets/arduino/11.png)
+ 3. `cd` to the  `gix-mkrfridays-iot/azure_iot_hub/arduino/` and run the *script.py* program (use `python3 ./script.py` or `python ./script.py`)
+    - This code automatically backs up and configures the ESP8266's `Arduino.h` and `platform.txt` files so that you can use the Azure IoT Arduino library without manual configuration!
+ 4. Open iot_configs.h and update the following:
+    1. WiFi SSID and Password.
+       - Make sure you are using a WiFi network that does not require additional manual steps after connection, such as opening a web browser and authenticating.
+    2. Device Connection String. This is the connection string that your device uses to authorize its access with Azure IoT hub. If you're using this repo to generate your device connection strings, then you'll find them in a file called `device_connection_strings.csv` after running the script that sets up your IoT hub and devices!
 #### Upload code to Arduino
 1. Choose the example you would like to run from *quickstarts* folder located in **gix-mkrfridays-iot/arduino/quickstarts**. Open the `.ino` file in the Arduino IDE (double-click it from your file explorer).
-2. Ensure that the correct serial port and board are selected.
-3. Plug the Arduino in. Run the sample by clicking upload.
+2. Copy or move the `iot_configs.h` file you added Wi-Fi credentials into the same Arduino folder. 
+3. Ensure that the correct serial port and board are selected otherwise you can't upload the code.
+4. Plug the Arduino in. Compile and upload the sample by clicking the *checkmark* in the top left corner of the IDE.
+5. To use the serial monitor, ensure that your board's baud rate is set to **115200**
 
 ### ESP32
