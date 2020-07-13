@@ -152,15 +152,28 @@ In order to customize the microcontroller, you have to re-flash the NodeMCU agai
 
 # Remote Control (via Azure IoT Hub)
 
-## Deploying the cloud infrastructure
+## Deploy Azure Cloud Infrastructure
 
 ### Overview
-<!-- TODO -->
+This repo contains a powerful orchestration script which creates cloud resources for the following:
+* **Create an IoT Hub and devices which can connect to said hub**
+  * Outputs IoT device connection strings to a file called *device_connection_strings.csv*
+* **Sets up a servless app and serverless functions which map to each of the previously created IoT devices**
+  * These functions allow Cloud 2 Device messages to invoke said device via HTTP requests
+  * Each function URL is output to a file `device_function_urls.csv`
+* **Generates and hosts a static site on the same storage account used for the serverless app**
+  * This site acts as a dashboard which, depending on the type of device you're using, can be invoked with its respective functionality directly from the dashboard
 
-### Prerequisites
+Want a diagram? Here's what it looks like with *two* devices, but on the free tier you can create up to 400 devices for your IoT Hub. This script has no problem provisioning that many devices!
+<div style="text-align:center">
+<!-- make the following images centered -->
+<img src="./assets/azure/1.png">
+</div>
+
+### Azure Prerequisites
  - Azure account with an active subscription (easy to sign up at https://azure.com)
- - Some shell experience (e.g. understanding of changing directories with cd)
- - Dev tools/knowledge
+ - Some shell experience (e.g. understanding of changing directories with `cd`)
+ - Dev tools
    - `python` (version 3.6.x to 3.8.x at the time of this writing) (should be accessible from your system PATH environment variable)
    - `npm` (should be accessible from your system PATH environment variable)
    - `git` (should be accessible from your system PATH environment variable)
@@ -207,6 +220,7 @@ In order to customize the microcontroller, you have to re-flash the NodeMCU agai
    ```
    python provision.py
    ```
+   Where `provision.py` is located in the directory `/path/to/gix-mkrfridays-iot/azure_iot_hub/azure/provision.py`
   
 ## Arduino Prerequisites
 ### Hardware
