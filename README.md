@@ -308,7 +308,7 @@ If any of these steps fail please double check these instructions, open an issue
     - You will also want to fetch the `iot_configs.h` file from either the [Azure IoT GitHub repo](https://github.com/Azure/azure-iot-arduino/blob/master/examples/iothub_ll_telemetry_sample/iot_configs.h) or the Arduino samples folder:  
     <img src="./assets/arduino/11.png" height=800 align='center'>  
  3. `cd` to the  `gix-mkrfridays-iot/azure_iot_hub/arduino/` and run the *script.py* program (use `python3 ./script.py` or `python ./script.py`)
-    - This code automatically backs up and configures the ESP8266's `Arduino.h` and `platform.txt` files so that you can use the Azure IoT Arduino library without manual configuration!
+    - This code automatically backs up and configures the ESP8266's *Arduino.h* and *platform.txt* files so that you can use the Azure IoT Arduino library without manual configuration!
  4. Open iot_configs.h and update the following:
     1. WiFi SSID and Password.
        - Make sure you are using a WiFi network that does not require additional manual steps after connection, such as opening a web browser and authenticating.
@@ -334,6 +334,7 @@ If any of these steps fail please double check these instructions, open an issue
   `AzureIoTUtility`  
   `AzureIoTProtocol_MQTT`  
   `AzureIoTProtocol_HTTP`  
+
 #### Install board into Arduino IDE
  1. (Windows) Start Arduino IDE and go to **File > Preferences**  
     (macOS) Start Arduino IDE and go to **Arduino > Preferences**  
@@ -355,7 +356,7 @@ If any of these steps fail please double check these instructions, open an issue
     - You will also want to fetch the `iot_configs.h` file from either the [Azure IoT GitHub repo](https://github.com/Azure/azure-iot-arduino/blob/master/examples/iothub_ll_telemetry_sample/iot_configs.h) or the Arduino samples folder:
     <img src="./assets/arduino/11.png" height=800 align='center'>  
  3. `cd` to the  `gix-mkrfridays-iot/azure_iot_hub/arduino/` and run the *script.py* program (use `python3 ./script.py` or `python ./script.py`)
-    - This code automatically backs up and configures the ESP32's `platform.txt` file so that you can use the Azure IoT Arduino library without manual configuration!
+    - This code automatically backs up and configures the ESP32's *platform.txt* file so that you can use the Azure IoT Arduino library without manual configuration!
  4. Open iot_configs.h and update the following:
     1. WiFi SSID and Password.
        - Make sure you are using a WiFi network that does not require additional manual steps after connection, such as opening a web browser and authenticating.
