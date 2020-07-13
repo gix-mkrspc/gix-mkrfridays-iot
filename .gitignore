@@ -149,3 +149,16 @@ obj
 appsettings.json
 local.settings.json
 .python_packages
+
+# Custom
+*.csv
+*.pickle
+settings.json
+host.json
+
+azure-functions-core-tools/
+local-sp.json
+porg-app*/
+IoT_device_name.txt
+launch.json
+**/generated_site/index.html

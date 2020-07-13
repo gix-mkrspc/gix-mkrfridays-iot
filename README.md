@@ -120,7 +120,7 @@ In order to customize the microcontroller, you have to re-flash the NodeMCU agai
 1. Set up a new virtual environment in Python
 - make sure you have python installed (open Command Prompt and type in `python`; if it opens python shell then you've confirmed Python is accessible in your Path; otherwise reinstall Python and ensure you check the box to add it to your system's path environment variable)
 - locate the directory you want the virtual environment to be installed in
-- in the Windows Command Prompt, enter "python -m venv venv"
+- in the Windows Command Prompt, enter `python -m venv venv`
   - This command invokes the python module *venv* (first parameter) and creates it inside a directory named *venv* (second parameter)
 - then run `.\venv\Scripts\Activate.bat`
   - This command activates the virtual environment; you should now see your command prompt prepended with **(venv)**
@@ -151,7 +151,78 @@ In order to customize the microcontroller, you have to re-flash the NodeMCU agai
 5. You can now develop your own custom esphome components! Get started on [esphome.io](http://esphome.io)
 
 # Remote Control (via Azure IoT Hub)
-## Prerequisites
+
+## Deploy Azure Cloud Infrastructure
+
+### Overview
+This repo contains a powerful orchestration script which creates cloud resources for the following:
+* **Create an IoT Hub and devices which can connect to said hub**
+  * Outputs IoT device connection strings to a file called *device_connection_strings.csv*
+* **Sets up a servless app and serverless functions which map to each of the previously created IoT devices**
+  * These functions allow Cloud 2 Device messages to invoke said device via HTTP requests
+  * Each function URL is output to a file `device_function_urls.csv`
+* **Generates and hosts a static site on the same storage account used for the serverless app**
+  * This site acts as a dashboard which, depending on the type of device you're using, can be invoked with its respective functionality directly from the dashboard
+
+Want a diagram? Here's what it looks like with *two* devices, but on the free tier you can create up to 400 devices for your IoT Hub. This script has no problem provisioning that many devices!
+<div style="text-align:center">
+<!-- make the following images centered -->
+<img src="./assets/azure/1.png">
+</div>
+
+### Azure Prerequisites
+ - Azure account with an active subscription (easy to sign up at https://azure.com)
+ - Some shell experience (e.g. understanding of changing directories with `cd`)
+ - Dev tools
+   - `python` (version 3.6.x to 3.8.x at the time of this writing) (should be accessible from your system PATH environment variable)
+   - `npm` (should be accessible from your system PATH environment variable)
+   - `git` (should be accessible from your system PATH environment variable)
+   - VSCode To configure code and assist with deployment
+
+### Initial Setup
+
+**Note:** These instructions should work for macOS/Linux/Windows since Python works cross platform, but we can't guarantee all platforms have been tested; if you run into an issue please open an issue [here](https://github.com/codycodes/gix-mkrfridays-iot/issues)
+
+1. The easiest way we've found to install all the required dependencies and configure your developement environment is by doing the following:
+   1. clone the repo:
+  ```
+  git clone https://github.com/codycodes/gix-mkrfridays-iot.git
+  ```
+   2. Navigate to the repo's cloned folder in your shell.
+   3. From here `cd` to the path `/gix-mkrfridays-iot/azure_iot_hub/python-sdk`
+   4. Create a Python virtual environment and activate it using the following commands. These commands will depend on your operating system, so please use the correct one for your OS:  
+   All operating systems do this:
+   ```
+    python -m venv venv
+   ```
+  Depending on your OS and config you can choose the appropriate out of the following:  
+   **Linux/macOS**
+   ```
+   source venv/bin/activate
+   ```
+  **Windows (using Powershell)**
+   ```
+  .\venv\Scripts\Activate.ps1
+   ```
+   **Windows (using cmd)**
+   ```
+   .\venv\Scripts\Activate.bat
+   ```
+   5. Now that your venv is activated, you can install the dependencies for the project:
+   ```
+   pip install -r requirements.txt
+   ```
+   6. With your venv setup and dependencies install, you can run the command `code .` to open the current directory in VSCode. If the command isn't working, [use the following guide to set it up](https://code.visualstudio.com/docs/setup/mac#_launching-from-the-command-line)
+   7. Opening the directory in this way should cause VSCode to search the directory for a python virtual environment and choose that as the Python interpreter for your window. In the bottom left corner you should see something like the following:
+   **Python 3.x.x 64-bit ('venv':venv)**
+   This lets you know that the venv is correctly being used!
+   8. You can now configure the options you'd like in the script and run using:
+   ```
+   python provision.py
+   ```
+   Where `provision.py` is located in the directory `/path/to/gix-mkrfridays-iot/azure_iot_hub/azure/provision.py`
+  
+## Arduino Prerequisites
 ### Hardware
 One of the following boards:
 - ESP8266 based boards with esp8266/arduino
