@@ -9,10 +9,47 @@
     <a class="github-button" href="https://github.com/codycodes/gix-mkrfridays-iot/issues" data-color-scheme="no-preference: light; light: light; dark: light;" data-size="large" aria-label="Issue codycodes/gix-mkrfridays-iot on GitHub">Issue</a>
 </div>
 
+
+
 ## About
 The NodeMCU is an open-source firmware and development kit which allows us to use a low-cost ESP8266 Wi-Fi MCU to provide “the best platform for IOT application development at the lowest cost” [NodeMCU homepage](https://www.nodemcu.com/index_en.html).  
 
 ESPHome is the software and firmware flasher we’ll be using; it’s a “system to control your ESP8266/ESP32 by simple yet powerful configuration files and control them remotely through Home Automation systems” [ESPHome homepage](https://esphome.io).
+
+Table of Contants:
+- [Local Control (via ESPHome)](#local-control-via-esphome)
+  - [Upon Completion](#upon-completion)
+  - [Components Required](#components-required)
+  - [Hardware Setup](#hardware-setup)
+  - [Software Setup](#software-setup)
+    - [What We're Gonna Do - The Overall Process](#what-were-gonna-do---the-overall-process)
+    - [Detailed Steps](#detailed-steps)
+    - [Congratulations! 👏👏👏](#congratulations-)
+  - [Extensibility](#extensibility)
+    - [Fun ideas](#fun-ideas)
+  - [Custom Development Setup](#custom-development-setup)
+    - [For Windows:](#for-windows)
+    - [For macOS/Linux](#for-macoslinux)
+- [Remote Control (via Azure IoT Hub)](#remote-control-via-azure-iot-hub)
+  - [Deploy Azure Cloud Infrastructure](#deploy-azure-cloud-infrastructure)
+    - [Overview](#overview)
+    - [Azure Prerequisites](#azure-prerequisites)
+    - [Initial Setup](#initial-setup)
+  - [Arduino Prerequisites](#arduino-prerequisites)
+    - [Hardware](#hardware)
+    - [Software](#software)
+  - [Setup Instructions](#setup-instructions)
+    - [ESP8266](#esp8266)
+      - [Installing Azure IoT Arduino libs](#installing-azure-iot-arduino-libs)
+      - [Install board into Arduino IDE](#install-board-into-arduino-ide)
+      - [Finish board setup via python script](#finish-board-setup-via-python-script)
+      - [Upload code to Arduino](#upload-code-to-arduino)
+    - [ESP32](#esp32)
+      - [Installing Azure IoT Arduino libs](#installing-azure-iot-arduino-libs-1)
+      - [Install board into Arduino IDE](#install-board-into-arduino-ide-1)
+      - [Finish board setup via python script](#finish-board-setup-via-python-script-1)
+      - [Upload code to Arduino](#upload-code-to-arduino-1)
+
 
 # Local Control (via ESPHome)
 
@@ -329,4 +366,3 @@ If any of these steps fail please double check these instructions, open an issue
   ![serial](./assets/arduino/8.png)
 4. Plug the Arduino in. Compile and upload the sample by clicking the *checkmark* in the top left corner of the IDE.
 5. To use the serial monitor, ensure that your board's baud rate is set to **115200** or **1000000** baud.
-
