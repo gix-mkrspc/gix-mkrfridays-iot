@@ -164,7 +164,9 @@ if CREATE_IOT_HUB:
 if CREATE_IOT_DEVICES:
     for i in range(IOT_HUB_NUM_DEVICES):
         if IOT_DEVICE_NAMES:
-            # TODO: this probably needs to be redone
+            # TODO Figure out how to implement device types here!
+            # We can create a device type that uses the name as the prefix:
+            #  e.g. codes-screen, codes-porg
             device_name = IOT_DEVICE_NAMES[i]
         else:
             device_name = f"{IOT_HUB_DEVICE_PREFIX}-{i}"
@@ -266,6 +268,8 @@ def create_func_app():
             for row in reader:
                 # set the device name as the func name
                 device_id = row[0]
+                # TODO: we can split the device type here to determine which
+                # template gets copied over
                 shutil.copytree(
                     f'../templates/led_matrix_esp32_iot_hub',
                     f'./{device_id}')
@@ -314,9 +318,9 @@ if WRITE_FUNCTION_URLS:
     CLIENT_SECRET = result['clientSecret']
     RESOURCE = 'https://management.azure.com'
     auth_body = {'grant_type': 'client_credentials',
-                'client_id': CLIENT_ID,
-                'client_secret': CLIENT_SECRET,
-                'resource': RESOURCE, }
+                 'client_id': CLIENT_ID,
+                 'client_secret': CLIENT_SECRET,
+                 'resource': RESOURCE, }
     response = requests.post(
             f'https://login.microsoftonline.com/{TENANT_ID}/oauth2/token',
             data=auth_body)
@@ -325,6 +329,8 @@ if WRITE_FUNCTION_URLS:
     # TODO: catch keyerrors and write messages
     with open('device_function_urls.csv', 'w', newline='') as csvfiles:
         writer = csv.writer(csvfiles)
+        # TODO: this should be split into multiple devices. I think we can
+        # just create an object for all these
         for device_id in IOT_DEVICE_NAMES:
             r = requests.post(
                     f'https://management.azure.com/subscriptions/{SUBSCRIPTION_ID}'
@@ -340,7 +346,7 @@ if WRITE_FUNCTION_URLS:
 
 
 if CREATE_STATIC_SITE:
-        # Generate site
+    # Generate site
     # TODO: this needs to be tested for cross platform
     os.system('python create_launch_site.py')
     print('Generating static site for dashboard...')
