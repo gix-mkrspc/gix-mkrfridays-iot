@@ -10,7 +10,7 @@
 </div>
 
 ## About
-The NodeMCU is an open-source firmware and development kit which allows us to use a low-cost ESP8266 WiFi MCU to provide “the best platform for IOT application development at the lowest cost” [NodeMCU homepage](https://www.nodemcu.com/index_en.html).  
+The NodeMCU is an open-source firmware and development kit which allows us to use a low-cost ESP8266 Wi-Fi MCU to provide “the best platform for IOT application development at the lowest cost” [NodeMCU homepage](https://www.nodemcu.com/index_en.html).  
 
 ESPHome is the software and firmware flasher we’ll be using; it’s a “system to control your ESP8266/ESP32 by simple yet powerful configuration files and control them remotely through Home Automation systems” [ESPHome homepage](https://esphome.io).
 
@@ -19,66 +19,99 @@ ESPHome is the software and firmware flasher we’ll be using; it’s a “syste
 ## Upon Completion
 By completing this project you will have a device which can wave 👋 when its virtual button is pressed via its website.
 
-## Components
-- NodeMCU WiFi development board *1
+<div style="text-align:center">
+<!-- make the following images centered -->
+<img src="./assets/hand.gif" height="400">
+<img src="./assets/boba.gif" height="400">
+</div>
+
+## Components Required
+- NodeMCU Wi-Fi development board *1
 - Servo motor (with three types of arm) *1
 - Enclosure box (MDF sheet) *6
 - Waving sign *1
   
 ---
 ## Hardware Setup
-1. Assemble the box
-> In progress
-2. Plug servo to NodeMCU ( Yellow-D4, Red-3.3v, Brown-GND )
-<div style="text-align:center">
-<!-- make the following images centered -->
-<img src="./assets/servo_bb.png" height="400">
-<img src="./assets/servo_real.png" height="400">
-</div>
+
+1\. Assemble the box
+  > Please follow the marks on the parts, match each paired marks. The marks should be facing inside the box.
+  <div style="text-align:center">
+  <!-- make the following images centered -->
+  <img src="./assets/assemble.gif">
+  </div>
+
+2\. Plug servo to NodeMCU ( Yellow/Light Orange-D4, Red-3.3v, Brown-GND )
+  <div style="text-align:center">
+  <!-- make the following images centered -->
+  <img src="./assets/servo_bb.png" height="400">
+  <img src="./assets/servo_real.png" height="400">
+  </div>
 
 ---
 ## Software Setup
+
+To make the process easier, you don't need to assemble everything while you set up the software. **You just need to plug your servo to the NodeMCU.** After the software is setup successfully you can then attach them to the box.
+
 *Prerequisites*
-- working WiFi, you know the SSID(name) & password
-- computer or phone
+- working Wi-Fi, you know the SSID(name) & password
+- computer or phone or any other device with Wi-Fi and a web browser
 
-We've already flashed the basic program, all you need to do is follow the below steps and connect it to your WiFi.
+We've already flashed the basic program, all you need to do is follow the below steps and connect it to your Wi-Fi.
 
-### The Overall Process
-1. Connect to NodeMCU WiFi
-2. Tell it your own WiFi name and password
-3. Let it connect to your WiFi
-4. Connect your phone back to your own WiFi
-5. Use your own WiFi to browse to the device's web server to control it
+### What We're Gonna Do - The Overall Process
+This is just a high level walkthrough; detailed steps to follow are in the next section.
+- Connect to NodeMCU Wi-Fi
+- Tell it your own Wi-Fi name and password
+- Let it connect to your Wi-Fi
+- Connect your phone back to your own Wi-Fi
+- Use your own Wi-Fi to browse to the device's web server to control it
 
-### Detailed Steps
-1. Plug in the micro USB cable (just for providing power, don't need to connect to a computer)
-2. Use your device (PC/phone) and connect to the WiFi netowrk: "gix_iot"
+### Detailed Steps 
+1. Plug in the micro USB cable for the NodeMCU (just for providing power, don't need to connect to a computer)
+2. Use your device (PC/phone) and connect to the Wi-Fi netowrk: "gix_iot"
 3. Password: "gixmkrspc"
 4. Wait for the webpage to popup, you will see this:
 ![ap_screenshot](./assets/ap_screenshot.png)
-> (If the page didn't show up after you connected to the WiFi, try to go to http://192.168.4.1/)
+> (If the page didn't show up after you connected to the Wi-Fi, try to go to http://192.168.4.1/)
 >
-> An iPhone or Android device may change the WiFi network back to your home network, since the NodeMCU doesn't have an Internet connection. You may need to ensure that "Auto Join" is turned off for your other WiFi (iPhone) or forget the other network (Android); this step is only to get the NodeMCU onto your home network and then you can re-join and/or turn on "Auto Join" for your home WiFi again.
-5. Enter your **own WiFi's** SSID(name) & password,
- you can use your home WiFi, phone hotspot, etc.
-6. Wait a few seconds after you see the success message. Press RST button on the NodeMCU and let the NodeMCU connect to your WiFi
-7. Disconnect your device from "gix_iot" and reconnect your device to your own WiFi
+> An iPhone or Android device may change the Wi-Fi network back to your home network, since the NodeMCU doesn't have an Internet connection. You may need to ensure that "Auto Join" is turned off for your other Wi-Fi (iPhone) or forget the other network (Android); this step is only to get the NodeMCU onto your home network and then you can re-join and/or turn on "Auto Join" for your home Wi-Fi again.
+5. Enter your **own Wi-Fi's** SSID(name) & password,
+ you can use your home Wi-Fi, phone hotspot, etc.
+6. After you see this message, **Press RST button on the NodeMCU**, let the NodeMCU reboot and connect to your own Wi-Fi
+![Wi-Fi_setup](./assets/wifisetup_screenshot.png)
+7. Disconnect your device from "gix_iot" and **reconnect your device to your own Wi-Fi**
 8. Open your browser and go to [http://servo_test.local](http://servo_test.local) you will see this page:
 ![control_screenshot](./assets/control_screenshot.png)
-> If you can't see this page, try refreshing the page several times in 1-2 minutes. After 1-2 minutes, if you still can't see this page. Go back to step **2.** and connect to "gix_iot" again. This time you might get a WiFi list in your popup page, connect to the WiFi you want.
+> If you can't see this page, try refreshing the page several times in 1-2 minutes. After 1-2 minutes, if you still can't see this page. Go back to step **2.** and connect to "gix_iot" again. This time you might get a Wi-Fi list in your popup page, connect to the Wi-Fi you want.
 
 9. Click Toggle, you can move the servo now 👋!
   
 ### Congratulations! 👏👏👏
-Now that the WiFi connection is configured, your NodeMCU will automatically connect to your WiFi every time it boots up.
+Now that the Wi-Fi connection is configured, your NodeMCU will automatically connect to your Wi-Fi every time it boots up.
 
-> If you want to connect to another WiFi, turn off or get away from the WiFi signal you previously connected to. Once the NodeMCU failed to connect to WiFi, it will start "ap mode" and you can reset it from step **2.**
+10. You can attach the servo and board to the enclosure
+<div style="text-align:center">
+<!-- make the following images centered -->
+<img src="./assets/finish0.jpg" height="300">
+<img src="./assets/finish1.jpg" height="300">
+<img src="./assets/finish2.jpg" height="300">
+</div>
+
+> If you want to connect to another Wi-Fi, turn off or get away from the Wi-Fi signal you previously connected to. Once the NodeMCU failed to connect to Wi-Fi, it will start "ap mode" and you can reset it from step **2.**
 
 > In the future we will have other activities involving this device! Please see the section below, tinker and bring any ideas or changes up so we can bring that functionality to other cohort members!
 
 ## Extensibility
 As the microcontroller is easily reprogrammable, the hand wave can be triggered, or its action changed by possibilities only limited by your imagination! For instance, you can easily hook ESPHome into an automation platform called Home Assistant, which will allow you to wave the hand for all sorts of triggers; for instance, if someone opens your door, you can use the ESPHome to wave. You can also change the hand itself to become an indicator; since we’re using a servo, you can control the state, or how much, the servo rotates. You can make the hand move to different positions depending on whether it’s cloudy or sunny and make the servo rotate to that predefined position when the weather changes.
+
+### Fun ideas
+Require a 5v Relay:
+- [USB laser lights](https://amzn.to/3gjo8u2) 
+- [Totoro w/two light modes](https://amzn.to/2TushS3)
+
+May require ESP32 to run due to memory:
+- [<$10 from Amazon digital display](https://amzn.to/3e5oylA)
 
 ## Custom Development Setup
 In order to customize the microcontroller, you have to re-flash the NodeMCU again. Below are the steps that you need to do.
@@ -175,3 +208,111 @@ In order to customize the microcontroller, you have to re-flash the NodeMCU agai
    python provision.py
    ```
   
+## Arduino Prerequisites
+### Hardware
+One of the following boards:
+- ESP8266 based boards with esp8266/arduino
+- ESP32 based boards with espressif/arduino-esp32  
+and a...
+- USB cable for data transfer or other flashing hardware
+
+### Software
+- [python3.5+](https://www.python.org/downloads/) Installed and accessible via your [PATH](https://www.tutorialspoint.com/python/python_environment.htm) environment variable
+- [git](https://git-scm.com)
+- [Arduino IDE](https://www.arduino.cc/en/main/software)
+
+## Setup Instructions
+If any of these steps fail please double check these instructions, open an issue [here](https://github.com/codycodes/gix-mkrfridays-iot/issues/new/choose), and see if there's a solution to the issue on the official [Azure IoT Arduino repo](https://github.com/Azure/azure-iot-arduino)
+
+
+### ESP8266
+#### Installing Azure IoT Arduino libs
+1. Open up the Arduino IDE and go to **Tools > Manage Libraries**
+    ![mng_lib](./assets/arduino/10.png)
+2. Install the following libraries through the Arduino IDE Library Manager:  
+  `AzureIoTHub`  
+  `AzureIoTUtility`  
+  `AzureIoTProtocol_MQTT`  
+  `AzureIoTProtocol_HTTP`  
+#### Install board into Arduino IDE
+ 1. (Windows) Start Arduino IDE and go to **File > Preferences**  
+    (macOS) Start Arduino IDE and go to **Arduino > Preferences**  
+ 2. In the *Additional Board Manager URLs:* field, enter `http://arduino.esp8266.com/stable/package_esp8266com_index.json`  
+   ![boards_url](./assets/arduino/1.png)
+   You can add multiple URLs for boards, separating each with a comma `,`
+ 3. Go to **Tools > Board: *currently selected board*** and open **Boards Manager**.  
+   ![boards_mgr](./assets/arduino/3.png)
+    - In **Boards Manager**, search for *esp8266* and install esp8266 version **2.5.2 or later**.
+     ![boards_mgr](./assets/arduino/5.png)
+ 4. Select your ESP8266 board from **Tools > Board: *currently selected board*** menu after installation. After selection, the menu should read **Tools > Board: "Generic ESP8266 Module"**:
+     ![boards_mgr](./assets/arduino/7.png)
+#### Finish board setup via python script
+ 1. Clone this repo using: 
+    
+    `git clone "https://github.com/codycodes/gix-mkrfridays-iot.git"`
+
+      - Note: if you already did this before you don't need to do it again! In that case skip to step 2.
+ 2. Open a terminal and `cd` to the directory you cloned the repo to. The path will be something like `/dir/to/clone/gix-mkrfridays-iot`, where `/dir/to/clone` is where you cloned the repo to.
+    - You will also want to fetch the `iot_configs.h` file from either the [Azure IoT GitHub repo](https://github.com/Azure/azure-iot-arduino/blob/master/examples/iothub_ll_telemetry_sample/iot_configs.h) or the Arduino samples folder:
+    ![example](./assets/arduino/11.png)
+ 3. `cd` to the  `gix-mkrfridays-iot/azure_iot_hub/arduino/` and run the *script.py* program (use `python3 ./script.py` or `python ./script.py`)
+    - This code automatically backs up and configures the ESP8266's `Arduino.h` and `platform.txt` files so that you can use the Azure IoT Arduino library without manual configuration!
+ 4. Open iot_configs.h and update the following:
+    1. WiFi SSID and Password.
+       - Make sure you are using a WiFi network that does not require additional manual steps after connection, such as opening a web browser and authenticating.
+    2. Device Connection String. This is the connection string that your device uses to authorize its access with Azure IoT hub. If you're using this repo to generate your device connection strings, then you'll find them in a file called `device_connection_strings.csv` after running the script that sets up your IoT hub and devices!
+#### Upload code to Arduino
+1. Choose the example you would like to run from *quickstarts* folder located in **gix-mkrfridays-iot/arduino/quickstarts**. Open the `.ino` file in the Arduino IDE (double-click it from your file explorer).
+2. Copy or move the `iot_configs.h` file you added Wi-Fi credentials into the same Arduino folder. 
+3. Ensure that the correct serial port and board are selected otherwise you can't upload the code.
+   ![serial](./assets/arduino/8.png)
+4. Plug the Arduino in. Compile and upload the sample by clicking the *checkmark* in the top left corner of the IDE.
+5. To use the serial monitor, ensure that your board's baud rate is set to **115200** baud.
+
+### ESP32
+#### Installing Azure IoT Arduino libs
+1. This step is a little different than on the esp8266 instructions since we need to manually build the lib `AzureIoTSocket_WiFi`, which is required. Do the following:
+  - run `git clone --recursive 'https://github.com/Azure/azure-iot-pal-arduino.git'`
+    - After running this command, `cd` to the dir `/path/to/azure-iot-pal-arduino` and run the following: `git submodule update --init --recursive`
+    - now `cd` to the folder containing the script to build the libs: `/azure-iot-pal-arduino/build_all/make_sdk.py`
+      - You can run this script and it will generate the libs in the current directory (not recommended) or you can have it output to a different location using the `-o` option. The libraries folder is dependent on platform/user configuration, but in my case on macOS it was in the following path: **/Users/my_user/Documents/Arduino/libraries**. Therefore in this case you can use the following command to output the built libs: `python make_sdk.py -o /Users/my_user/Documents/Arduino/libraries`
+2. Check **/Users/my_user/Documents/Arduino/libraries** to verify that Install the following libraries installed correctly:
+  `AzureIoTSocket_WiFi`
+  `AzureIoTHub`  
+  `AzureIoTUtility`  
+  `AzureIoTProtocol_MQTT`  
+  `AzureIoTProtocol_HTTP`  
+#### Install board into Arduino IDE
+ 1. (Windows) Start Arduino IDE and go to **File > Preferences**  
+    (macOS) Start Arduino IDE and go to **Arduino > Preferences**  
+ 2. In the *Additional Board Manager URLs:* field, enter `https://dl.espressif.com/dl/package_esp32_index.json`  
+   You can add multiple URLs for boards, separating each with a comma `,`
+ 3. Go to **Tools > Board: *currently selected board*** and open **Boards Manager**.  
+   ![boards_mgr](./assets/arduino/3.png)
+    - In **Boards Manager**, search for *esp32* and install esp32 version **1.0.2 or later**.
+     ![boards_mgr](./assets/arduino/4.png)
+ 4. Select your ESP32 board from **Tools > Board: *currently selected board*** menu after installation. After selection, the menu should read **Tools > Board: "ESP32 Dev Module"**:
+     ![boards_mgr](./assets/arduino/6.png)
+#### Finish board setup via python script
+ 1. Clone this repo using: 
+    
+    `git clone "https://github.com/codycodes/gix-mkrfridays-iot.git"`
+
+      - Note: if you already did this before you don't need to do it again! In that case skip to step 2.
+ 2. Open a terminal and `cd` to the directory you cloned the repo to. The path will be something like `/dir/to/clone/gix-mkrfridays-iot`, where `/dir/to/clone` is where you cloned the repo to.
+    - You will also want to fetch the `iot_configs.h` file from either the [Azure IoT GitHub repo](https://github.com/Azure/azure-iot-arduino/blob/master/examples/iothub_ll_telemetry_sample/iot_configs.h) or the Arduino samples folder:
+    ![example](./assets/arduino/11.png)
+ 3. `cd` to the  `gix-mkrfridays-iot/azure_iot_hub/arduino/` and run the *script.py* program (use `python3 ./script.py` or `python ./script.py`)
+    - This code automatically backs up and configures the ESP32's `platform.txt` file so that you can use the Azure IoT Arduino library without manual configuration!
+ 4. Open iot_configs.h and update the following:
+    1. WiFi SSID and Password.
+       - Make sure you are using a WiFi network that does not require additional manual steps after connection, such as opening a web browser and authenticating.
+    2. Device Connection String. This is the connection string that your device uses to authorize its access with Azure IoT hub. If you're using this repo to generate your device connection strings, then you'll find them in a file called `device_connection_strings.csv` after running the script that sets up your IoT hub and devices!
+#### Upload code to Arduino
+1. Choose the example you would like to run from *quickstarts* folder located in **gix-mkrfridays-iot/arduino/quickstarts**. Open the `.ino` file in the Arduino IDE (double-click it from your file explorer).
+2. Copy or move the `iot_configs.h` file you added Wi-Fi credentials into the same Arduino folder. 
+3. Ensure that the correct serial port and board are selected otherwise you can't upload the code.
+  ![serial](./assets/arduino/8.png)
+4. Plug the Arduino in. Compile and upload the sample by clicking the *checkmark* in the top left corner of the IDE.
+5. To use the serial monitor, ensure that your board's baud rate is set to **115200** or **1000000** baud.
+
