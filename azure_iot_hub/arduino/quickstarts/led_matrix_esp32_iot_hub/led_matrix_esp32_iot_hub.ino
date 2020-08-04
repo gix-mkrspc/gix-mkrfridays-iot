@@ -127,6 +127,10 @@ static IOTHUBMESSAGE_DISPOSITION_RESULT receive_message_callback(IOTHUB_MESSAGE_
             g_continueRunning = false;
         } else {
           String string= String(buffer);
+          bool smallStr = false;
+          if (string.length() <= 23) {
+            smallStr = true;
+          }
           // 75 chars max
           char asciiOnly[75] = { "" };
           int j = 0;
@@ -145,11 +149,108 @@ static IOTHUBMESSAGE_DISPOSITION_RESULT receive_message_callback(IOTHUB_MESSAGE_
               j++;
             }
           }
-          textPosition_t scrollAlign = PA_LEFT;
+          // the following works if your display is UPSIDE DOWN
+          // it reflects over the horizontal & vertical axes, flipping all scrollEffect as well
+          P.setZoneEffect(0, 1, PA_FLIP_UD);
+          P.setZoneEffect(0, 1, PA_FLIP_LR);
+          textPosition_t scrollAlign;
           uint8_t scrollSpeed = 100;    // default frame delay value
           uint16_t scrollPause = 2000; // in milliseconds
-          textEffect_t scrollEffect = PA_SCROLL_LEFT;
+          textEffect_t scrollEffect;
+
+          int randNumber;
+          if (smallStr){
+            scrollAlign = PA_CENTER;
+            scrollEffect = PA_RANDOM;
+            randNumber = random(26);
+            switch(randNumber) {
+                case 0:
+                  scrollEffect = PA_RANDOM;
+                  break;
+                case 1:
+                  scrollEffect = PA_GROW_UP;
+                  break;
+                case 2:
+                  scrollEffect = PA_GROW_DOWN;
+                  break;
+                case 3:
+                  scrollEffect = PA_MESH;
+                  break;
+                case 4:
+                  scrollEffect = PA_OPENING;
+                  break;
+                case 5:
+                  scrollEffect = PA_OPENING_CURSOR;
+                  break;
+                case 6:
+                  scrollEffect = PA_SCAN_HORIZ;
+                  break;
+                case 7:
+                  scrollEffect = PA_SCAN_HORIZX;
+                  break;
+                case 8:
+                  scrollEffect = PA_SCAN_VERT;
+                  break;
+                case 9:
+                  scrollEffect = PA_SCAN_VERTX;
+                  break;
+                case 10:
+                  scrollEffect = PA_WIPE;
+                  break;
+                case 11:
+                  scrollEffect = PA_WIPE_CURSOR;
+                  break;
+                case 12:
+                  scrollEffect = PA_BLINDS;
+                  break;
+                case 13:
+                  scrollEffect = PA_SLICE;
+                  break;
+                case 14:
+                  scrollEffect = PA_CLOSING;
+                  break;
+                case 15:
+                  scrollEffect = PA_DISSOLVE;
+                  break;
+                case 16:
+                  scrollEffect = PA_FADE;
+                  break;
+                case 17:
+                  scrollEffect = PA_MESH;
+                  break;
+                case 18:
+                  scrollEffect = PA_SCROLL_DOWN;
+                  break;
+                case 19:
+                  scrollEffect = PA_SCROLL_DOWN_LEFT;
+                  break;
+                case 20:
+                  scrollEffect = PA_SCROLL_DOWN_RIGHT;
+                  break;
+                case 21:
+                  scrollEffect = PA_SCROLL_UP_RIGHT;
+                  break;
+                case 22:
+                  scrollEffect = PA_SCROLL_UP_LEFT;
+                  break;
+                case 23:
+                  scrollEffect = PA_SCROLL_UP;
+                  break;
+                case 24:
+                  scrollEffect = PA_PRINT;
+                  break;                             
+                default:
+                  scrollEffect = PA_SCROLL_RIGHT;
+                  break;
+            }
+          } else {
+            // Longer message
+            scrollAlign = PA_RIGHT;
+            scrollEffect = PA_SCROLL_RIGHT;
+          }
+          
           P.displayText(asciiOnly, scrollAlign, scrollSpeed, scrollPause, scrollEffect, scrollEffect);
+          
           while(!P.displayAnimate())
           {
             
