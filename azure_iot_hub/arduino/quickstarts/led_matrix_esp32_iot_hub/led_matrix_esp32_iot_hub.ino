@@ -128,7 +128,7 @@ static IOTHUBMESSAGE_DISPOSITION_RESULT receive_message_callback(IOTHUB_MESSAGE_
         } else {
           String string= String(buffer);
           bool smallStr = false;
-          if (string.length() <= 20) {
+          if (string.length() <= 23) {
             smallStr = true;
           }
           // 75 chars max
