@@ -113,7 +113,16 @@ USE_RANDOM_IDENTIFIERS = False
 IOT_database = open("IoT_device_name.txt", "r")
 IOT_database_list = IOT_database.read()
 
-IOT_DEVICE_NAMES = IOT_database_list.split('\n')
+# Process device names & types
+IOT_DEVICES = IOT_database_list.split('\n')
+IOT_DEVICE_TYPES = [device.split(',') for device in IOT_DEVICES]
+IOT_DEVICE_NAMES = []
+for device in IOT_DEVICE_TYPES:
+    if len(device) > 1:
+        for device_type in device[1:]:
+            IOT_DEVICE_NAMES.append(f'{device[0]}-{device_type}')
+    else:
+        IOT_DEVICE_NAMES.append(device[0])
 
 # The number of devices you want to create.
 # Only applies if you set USE_RANDOM_IDENTIFIERS to True
@@ -340,7 +349,7 @@ if WRITE_FUNCTION_URLS:
 
 
 if CREATE_STATIC_SITE:
-        # Generate site
+    # Generate site
     # TODO: this needs to be tested for cross platform
     os.system('python create_launch_site.py')
     print('Generating static site for dashboard...')
