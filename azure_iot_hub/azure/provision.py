@@ -13,6 +13,7 @@ import time
 import requests
 import fileinput
 import shutil
+from Device import *
 
 # TODO: Follow the official code guidelines:
 # https://azure.github.io/azure-sdk/python_introduction.html
@@ -44,29 +45,35 @@ RBAC_SERVICE_PRINCIPAL_NAME = "iotporgpython3"
 try:
     IOT_RESOURCES = pickle.load(open("resource_state.pickle", "rb"))
     IOT_HUB_NAME = IOT_RESOURCES['IOT_HUB_NAME']
-    STORAGE_ACCT_NAME = IOT_RESOURCES['STORAGE_ACCT_NAME']
     print(f"IOT_HUB_NAME received: {IOT_HUB_NAME}")
+    STORAGE_ACCT_NAME = IOT_RESOURCES['STORAGE_ACCT_NAME']
     print(f"STORAGE_ACCT_NAME received: {STORAGE_ACCT_NAME}")
+    FUNCTION_APP_NAME = IOT_RESOURCES['FUNCTION_APP_NAME']
+    print(f"FUNCTION_APP_NAME received: {FUNCTION_APP_NAME}")
 except (OSError, IOError) as e:
     IOT_RESOURCES = {}
     IOT_HUB_NAME = f"{RESOURCE_GROUP_NAME}-{random.randint(1,100000):05}"
     IOT_RESOURCES['IOT_HUB_NAME'] = IOT_HUB_NAME
-    print(f"IOT_HUB_NAME doesn't exist, created: {IOT_HUB_NAME}")
+    print(f"IOT_HUB_NAME didn't exist, created: {IOT_HUB_NAME}")
     # Must be <= 24 chars and alphanumeric only
     STORAGE_ACCT_NAME = f"storage{random.randint(1,100000):05}"
     IOT_RESOURCES['STORAGE_ACCT_NAME'] = STORAGE_ACCT_NAME
-    print(f"STORAGE_ACCT_NAME doesn't exist, created: {STORAGE_ACCT_NAME}")
+    print(f"STORAGE_ACCT_NAME didn't exist, created: {STORAGE_ACCT_NAME}")
+    FUNCTION_APP_NAME = f"{RESOURCE_GROUP_NAME}" \
+                        f"-app-{random.randint(1,100000):05}"
+    IOT_RESOURCES['FUNCTION_APP_NAME'] = FUNCTION_APP_NAME
+    print(f"FUNCTION_APP_NAME didn't exist, created: {FUNCTION_APP_NAME}")
     pickle.dump(IOT_RESOURCES, open("resource_state.pickle", "wb"))
 
 
-# TODO: store in a pickle
-# The name of the serverless app which holds the functions
-# Should be globally unique
-FUNCTION_APP_NAME = f"{RESOURCE_GROUP_NAME}" \
-                    f"-app-{random.randint(1,100000):05}"
+DEVICE_DIR_MAPPINGS = {
+    'blink': 'blink_onboard_esp8266_iot_hub',
+    'screen': 'led_matrix_esp32_iot_hub',
+    'porg': 'porg_esp8266_iot_hub',
+    'servo': 'servo_esp8266_iot_hub',
+    'generic': 'generic_esp8266_iot_hub'
+}
 
-# TODO: remove when done testing
-FUNCTION_APP_NAME = f"porg-app2"
 # find locations with az functionapp list-consumption-locations
 FUNCTION_APP_LOCATION = "westus"
 
@@ -92,7 +99,7 @@ WRITE_FUNCTION_URLS = True
 
 # Needed to access Azure REST API; if you have
 #  local-sp.json in this dir you don't need to run this
-CREATE_RBAC_SP = True
+CREATE_RBAC_SP = False
 
 # Determines whether to create a static site dashboard
 CREATE_STATIC_SITE = True
@@ -116,18 +123,22 @@ IOT_database_list = IOT_database.read()
 # Process device names & types
 IOT_DEVICES = IOT_database_list.split('\n')
 IOT_DEVICE_TYPES = [device.split(',') for device in IOT_DEVICES]
-IOT_DEVICE_NAMES = []
-for device in IOT_DEVICE_TYPES:
-    if len(device) > 1:
-        for device_type in device[1:]:
-            IOT_DEVICE_NAMES.append(f'{device[0]}-{device_type}')
+IOT_DEVICES = {}
+
+for entry in IOT_DEVICE_TYPES:
+    name = entry[0].strip()
+    if len(entry) > 1:
+        for kind in entry[1:]:
+            device = Device(name, kind.strip())
+            IOT_DEVICES[device.device_name] = device
     else:
-        IOT_DEVICE_NAMES.append(device[0])
+        device = Device(name)
+        IOT_DEVICES[device.device_name] = device
 
 # The number of devices you want to create.
 # Only applies if you set USE_RANDOM_IDENTIFIERS to True
-# Otherwise it will be the length of IOT_DEVICE_NAMES
-IOT_HUB_NUM_DEVICES = len(IOT_DEVICE_NAMES)
+# Otherwise it will be the length of IOT_DEVICES
+IOT_HUB_NUM_DEVICES = len(IOT_DEVICES)
 
 # The SKU; by default it's set for free tier
 IOT_HUB_SKU = "F1"
@@ -171,23 +182,21 @@ if CREATE_IOT_HUB:
 # TODO: if there's a prefix just append the number i to the end of it
 #  OR if it's from the file just use that name
 if CREATE_IOT_DEVICES:
-    for i in range(IOT_HUB_NUM_DEVICES):
-        if IOT_DEVICE_NAMES:
-            # TODO: this probably needs to be redone
-            device_name = IOT_DEVICE_NAMES[i]
-        else:
-            device_name = f"{IOT_HUB_DEVICE_PREFIX}-{i}"
+    for device_name in IOT_DEVICES:
         az_cli(
             f"iot hub device-identity create"
             f" -n {IOT_HUB_NAME} -d {device_name}")
 
+    #  Get device connection strings
     with open('device_connection_strings.csv', 'w', newline='') as csvfiles:
         writer = csv.writer(csvfiles)
-        for device_name in IOT_DEVICE_NAMES:
+        for device_name in IOT_DEVICES:
             direct_output = az_cli(
                 f"iot hub device-identity show-connection-string"
                 f" -d {device_name} -n {IOT_HUB_NAME}")
-            writer.writerow([device_name, direct_output["connectionString"]])
+            connection_string = direct_output["connectionString"]
+            IOT_DEVICES[device_name].connection_string = connection_string
+            writer.writerow([device_name, connection_string])
 
 
 def update_line_file(
@@ -266,29 +275,23 @@ def create_func_app():
             f'iot hub show-connection-string'
             f' --name {IOT_HUB_NAME} --policy-name service'
         )
-        # TODO: get the type of device to copy from the list of names here
-        # Or just set the type of device to copy
-        with open(
-                '../device_connection_strings.csv', 'r', newline='') \
-                as csvfile:
-            reader = csv.reader(csvfile)
-            for row in reader:
-                # set the device name as the func name
-                device_id = row[0]
-                shutil.copytree(
-                    f'../templates/led_matrix_esp32_iot_hub',
-                    f'./{device_id}')
-                update_line_file(
-                    f'./{device_id}/__init__.py',
-                    f'CONNECTION_STRING = ',
-                    f"CONNECTION_STRING ="
-                    f" '{c2d_connection_string['connectionString']}'"
-                )
-                update_line_file(
-                    f'./{device_id}/__init__.py',
-                    f'DEVICE_ID = ',
-                    f"DEVICE_ID = '{device_id}'"
-                )
+        for d in IOT_DEVICES:
+            device = IOT_DEVICES[d]
+            # set the device name as the func name
+            shutil.copytree(
+                f'../templates/{DEVICE_DIR_MAPPINGS[device.kind]}',
+                f'./{device.device_name}')
+            update_line_file(
+                f'./{device.device_name}/__init__.py',
+                f'CONNECTION_STRING = ',
+                f"CONNECTION_STRING ="
+                f" '{c2d_connection_string['connectionString']}'"
+            )
+            update_line_file(
+                f'./{device.device_name}/__init__.py',
+                f'DEVICE_ID = ',
+                f"DEVICE_ID = '{device.device_name}'"
+            )
         time.sleep(10)
 
     print('Deploying function to Azure...')
@@ -298,6 +301,18 @@ def create_func_app():
 
 if CREATE_SERVERLESS_APP or CREATE_FUNCTIONS:
     create_func_app()
+    with open('device_function_urls.csv', 'w', newline='') as csvfiles:
+        writer = csv.writer(csvfiles)
+        for d in IOT_DEVICES:
+            device = IOT_DEVICES[d]
+            device.function_url = f"https://{FUNCTION_APP_NAME}.azurewebsites.net" \
+                                f"/api/{device.device_name}"
+            writer.writerow([device.device_name, device.function_url])
+    pickle.dump(IOT_DEVICES, open("devices.pickle", "wb"))
+    print("Successfully wrote device function URLs")
+    for d in IOT_DEVICES:
+        device = IOT_DEVICES[d]
+        print(f'device name: {device.name} -> url: {device.function_url}')
 
 
 # TODO: store the output in a pickle
@@ -306,47 +321,48 @@ if CREATE_SERVERLESS_APP or CREATE_FUNCTIONS:
 # TODO: make this a Path object and be careful; use full paths
 # TODO: check if it exists here first
 # Create/fetch RBAC and request an OAuth token
-if CREATE_RBAC_SP:
-    os.system(
-        f'az ad sp create-for-rbac --sdk-auth'
-        f' --name {RBAC_SERVICE_PRINCIPAL_NAME} > local-sp.json')
-    print("Waiting a minute for RBAC to finish updating...")
-    time.sleep(60)
+# if CREATE_RBAC_SP:
+#     os.system(
+#         f'az ad sp create-for-rbac --sdk-auth'
+#         f' --name {RBAC_SERVICE_PRINCIPAL_NAME} > local-sp.json')
+#     print("Waiting a minute for RBAC to finish updating...")
+#     time.sleep(60)
 
-if WRITE_FUNCTION_URLS:
-    with open('local-sp.json') as json_file:
-        result = json.load(json_file)
+# if WRITE_FUNCTION_URLS:
+#     with open('local-sp.json') as json_file:
+#         result = json.load(json_file)
 
-    SUBSCRIPTION_ID = result['subscriptionId']
-    TENANT_ID = result['tenantId']
-    CLIENT_ID = result['clientId']
-    CLIENT_SECRET = result['clientSecret']
-    RESOURCE = 'https://management.azure.com'
-    auth_body = {'grant_type': 'client_credentials',
-                'client_id': CLIENT_ID,
-                'client_secret': CLIENT_SECRET,
-                'resource': RESOURCE, }
-    response = requests.post(
-            f'https://login.microsoftonline.com/{TENANT_ID}/oauth2/token',
-            data=auth_body)
-    aad_token = response.json()['access_token']
+#     SUBSCRIPTION_ID = result['subscriptionId']
+#     TENANT_ID = result['tenantId']
+#     CLIENT_ID = result['clientId']
+#     CLIENT_SECRET = result['clientSecret']
+#     RESOURCE = 'https://management.azure.com'
+#     auth_body = {'grant_type': 'client_credentials',
+#                 'client_id': CLIENT_ID,
+#                 'client_secret': CLIENT_SECRET,
+#                 'resource': RESOURCE, }
+#     response = requests.post(
+#             f'https://login.microsoftonline.com/{TENANT_ID}/oauth2/token',
+#             data=auth_body)
+#     aad_token = response.json()['access_token']
 
-    # TODO: catch keyerrors and write messages
-    with open('device_function_urls.csv', 'w', newline='') as csvfiles:
-        writer = csv.writer(csvfiles)
-        for device_id in IOT_DEVICE_NAMES:
-            r = requests.post(
-                    f'https://management.azure.com/subscriptions/{SUBSCRIPTION_ID}'
-                    f'/resourceGroups/{RESOURCE_GROUP_NAME}'
-                    f'/providers/Microsoft.Web/sites/{FUNCTION_APP_NAME}'
-                    f'/functions/{device_id}/listKeys?api-version=2018-02-01',
-                    headers={'Authorization': f'Bearer {aad_token}'})
-            code = r.json()['default']
-            url = f'https://{FUNCTION_APP_NAME}.azurewebsites.net/api' \
-                f'/{device_id}?code={code}'
-            writer.writerow([device_id, url])
-        print("Successfully wrote device function URLs")
-
+#     # TODO: catch keyerrors and write messages
+#     with open('device_function_urls.csv', 'w', newline='') as csvfiles:
+#         writer = csv.writer(csvfiles)
+#         for device_id in IOT_DEVICES:
+#             r = requests.post(
+#                     f'https://management.azure.com/subscriptions/{SUBSCRIPTION_ID}'
+#                     f'/resourceGroups/{RESOURCE_GROUP_NAME}'
+#                     f'/providers/Microsoft.Web/sites/{FUNCTION_APP_NAME}'
+#                     f'/functions/{device_id}/listKeys?api-version=2018-02-01',
+#                     headers={'Authorization': f'Bearer {aad_token}'})
+#             code = r.json()['default']
+#             url = f'https://{FUNCTION_APP_NAME}.azurewebsites.net/api' \
+#                 f'/{device_id}?code={code}'
+#             IOT_DEVICES[device_id].function_url = url
+#             writer.writerow([device_id, url])
+#         pickle.dump(IOT_DEVICES, open("devices.pickle", "wb"))
+#         print("Successfully wrote device function URLs")
 
 if CREATE_STATIC_SITE:
     # Generate site
