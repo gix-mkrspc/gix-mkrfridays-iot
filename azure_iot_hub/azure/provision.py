@@ -104,7 +104,7 @@ CREATE_RBAC_SP = False
 # Determines whether to create a static site dashboard
 CREATE_STATIC_SITE = True
 
-# If you have a list of device identifiers, you can pass these in as a filer
+# If you have a list of device identifiers, you can pass these in as a file
 #   in the following format:
 #   device_id1
 #   device_id2
@@ -112,9 +112,6 @@ CREATE_STATIC_SITE = True
 # Otherwise, devices will be created with random identifiers. All identifiers
 # and connection strings will be stored in a file called
 # device_connection_strings.csv
-
-# TODO: this should be implemented and tested
-USE_RANDOM_IDENTIFIERS = False
 
 # TODO: wrap this in a try and also use WITH
 IOT_database = open("IoT_device_name.txt", "r")
@@ -135,17 +132,9 @@ for entry in IOT_DEVICE_TYPES:
         device = Device(name)
         IOT_DEVICES[device.device_name] = device
 
-# The number of devices you want to create.
-# Only applies if you set USE_RANDOM_IDENTIFIERS to True
-# Otherwise it will be the length of IOT_DEVICES
-IOT_HUB_NUM_DEVICES = len(IOT_DEVICES)
-
 # The SKU; by default it's set for free tier
 IOT_HUB_SKU = "F1"
 IOT_HUB_PARTITION_COUNT = "2"
-
-# Only applies if you set USE_RANDOM_IDENTIFIERS to True
-IOT_HUB_DEVICE_PREFIX = "device"
 
 resource_client = get_client_from_cli_profile(ResourceManagementClient)
 
@@ -313,56 +302,6 @@ if CREATE_SERVERLESS_APP or CREATE_FUNCTIONS:
     for d in IOT_DEVICES:
         device = IOT_DEVICES[d]
         print(f'device name: {device.name} -> url: {device.function_url}')
-
-
-# TODO: store the output in a pickle
-# The az_cli command wasn't working so revert to os.system
-# and store output in a json file
-# TODO: make this a Path object and be careful; use full paths
-# TODO: check if it exists here first
-# Create/fetch RBAC and request an OAuth token
-# if CREATE_RBAC_SP:
-#     os.system(
-#         f'az ad sp create-for-rbac --sdk-auth'
-#         f' --name {RBAC_SERVICE_PRINCIPAL_NAME} > local-sp.json')
-#     print("Waiting a minute for RBAC to finish updating...")
-#     time.sleep(60)
-
-# if WRITE_FUNCTION_URLS:
-#     with open('local-sp.json') as json_file:
-#         result = json.load(json_file)
-
-#     SUBSCRIPTION_ID = result['subscriptionId']
-#     TENANT_ID = result['tenantId']
-#     CLIENT_ID = result['clientId']
-#     CLIENT_SECRET = result['clientSecret']
-#     RESOURCE = 'https://management.azure.com'
-#     auth_body = {'grant_type': 'client_credentials',
-#                 'client_id': CLIENT_ID,
-#                 'client_secret': CLIENT_SECRET,
-#                 'resource': RESOURCE, }
-#     response = requests.post(
-#             f'https://login.microsoftonline.com/{TENANT_ID}/oauth2/token',
-#             data=auth_body)
-#     aad_token = response.json()['access_token']
-
-#     # TODO: catch keyerrors and write messages
-#     with open('device_function_urls.csv', 'w', newline='') as csvfiles:
-#         writer = csv.writer(csvfiles)
-#         for device_id in IOT_DEVICES:
-#             r = requests.post(
-#                     f'https://management.azure.com/subscriptions/{SUBSCRIPTION_ID}'
-#                     f'/resourceGroups/{RESOURCE_GROUP_NAME}'
-#                     f'/providers/Microsoft.Web/sites/{FUNCTION_APP_NAME}'
-#                     f'/functions/{device_id}/listKeys?api-version=2018-02-01',
-#                     headers={'Authorization': f'Bearer {aad_token}'})
-#             code = r.json()['default']
-#             url = f'https://{FUNCTION_APP_NAME}.azurewebsites.net/api' \
-#                 f'/{device_id}?code={code}'
-#             IOT_DEVICES[device_id].function_url = url
-#             writer.writerow([device_id, url])
-#         pickle.dump(IOT_DEVICES, open("devices.pickle", "wb"))
-#         print("Successfully wrote device function URLs")
 
 if CREATE_STATIC_SITE:
     # Generate site
