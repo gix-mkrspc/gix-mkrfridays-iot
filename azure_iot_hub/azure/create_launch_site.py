@@ -17,7 +17,7 @@ IMAGES = {
              "._AC_SL1100_.jpg",
     'blink': "https://images-na.ssl-images-amazon.com/images/I/71JLez8iW5L"
              "._AC_SL1002_.jpg",
-    'Generic': "https://images-na.ssl-images-amazon.com/images/I/61W7jyyhFxL"
+    'generic': "https://images-na.ssl-images-amazon.com/images/I/61W7jyyhFxL"
                "._AC_SL1200_.jpg"
     }
 # Get devices
