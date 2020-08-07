@@ -4,13 +4,20 @@ function invokeDevice(name, url) {
         destroyAfter: 3000,
         max: 1
     });
-    let msg = document.getElementById(`text_${name}`).value;
+    let msg;
+    try {
+        msg = document.getElementById(`text_${name}`).value;
+      }
+      catch(err) {
+        msg = null;
+      }
     ba.setBackground('success'); // set the alert to a success one
     if(msg){
         document.getElementById(`text_${name}`).value = '';
         sendWebRequest("GET",`${url}&msg=${msg}`);
         ba.addH(3, `Success! The device "${name}" is being invoked with this message: ${msg}`); // create a heading 1 tag
     } else {
+        sendWebRequest("GET",`${url}`);
         ba.addH(3, `Success! The device "${name}" is being invoked.`); // create a heading 1 tag
     }
     document.getElementsByTagName('h1')[0].appendChild(ba.render());

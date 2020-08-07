@@ -1,6 +1,7 @@
 from yattag import Doc
 import csv
 import os
+import pickle
 
 doc, tag, text = Doc().tagtext()
 
@@ -8,12 +9,25 @@ FILE_PATH = 'device_function_urls.csv'
 
 # HTML markup variables
 TITLE = "GIX IoT Hub"
-PORG_IMG = "https://images-na." \
-           "ssl-images-amazon.com/images/I/917jytDQwJL" \
-           "._AC_SL1500_.jpg"
+IMAGES = {
+    'porg': "https://images-na.ssl-images-amazon.com/images/I/917jytDQwJL"
+            "._AC_SL1500_.jpg",
+    'screen': "https://images-na.ssl-images-amazon.com/images/I/51b9oSYE-rL.jpg",
+    'servo': "https://images-na.ssl-images-amazon.com/images/I/515cu4qXTrL"
+             "._AC_SL1100_.jpg",
+    'blink': "https://images-na.ssl-images-amazon.com/images/I/71JLez8iW5L"
+             "._AC_SL1002_.jpg",
+    'generic': "https://images-na.ssl-images-amazon.com/images/I/61W7jyyhFxL"
+               "._AC_SL1200_.jpg"
+    }
+# Get devices
+try:
+    DEVICES = pickle.load(open("devices.pickle", "rb"))
+except (OSError, IOError) as e:
+    print('Could not find devices to create HTML template from!')
 
 
-def create_card(device_name, device_type, url, img):
+def create_card(device_name, device_id, device_type, url, img):
     with tag('div', klass='col-md'):
         with tag('div', klass='col card'):
             with tag('div', klass='row'):
@@ -30,12 +44,12 @@ def create_card(device_name, device_type, url, img):
                         doc.stag(
                             'input',
                             type='text',
-                            id=f'text_{device_name}')
+                            id=f'text_{device_id}')
                     with tag(
                             'button',
                             klass='btn btn-primary',
                             id='activatebutton',
-                            onclick=f"invokeDevice('{device_name}'"
+                            onclick=f"invokeDevice('{device_id}'"
                                     f",'{url}')"):
                         text(f"Activate {device_name}'s {device_type}")
 
@@ -68,14 +82,14 @@ with tag('html', lang="en"):
             text(TITLE)
         with tag('div', klass='container'):
             with tag('div', klass='row'):
-                with open(FILE_PATH, 'r', newline='') as csvfile:
-                    reader = csv.reader(csvfile)
-                    for row in reader:
-                        create_card(
-                            device_name=row[0],
-                            device_type="screen",
-                            url=row[1],
-                            img=PORG_IMG)
+                for d in DEVICES:
+                    device = DEVICES[d]
+                    create_card(
+                        device_name=device.name,
+                        device_id=device.device_name,
+                        device_type=device.kind,
+                        url=device.function_url,
+                        img=IMAGES[device.kind])
 
 
 doc.asis(
