@@ -83,12 +83,13 @@ with tag('html', lang="en"):
             text(TITLE)
         with tag('div', klass='container'):
             with tag('div', klass='embed-responsive embed-responsive-16by9'):
-                doc.tag(
-                    'iframe',
-                    klass='embed-responsive-item',
-                    allow='camera; microphone; fullscreen; display-capture',
-                    src=LIVESTREAM_URL,
-                    style='height: 100%; width: 100%; border: 0px;')
+                with tag(
+                       'iframe',
+                       klass='embed-responsive-item',
+                       allow='camera; microphone; fullscreen; display-capture',
+                       src=LIVESTREAM_URL,
+                       style='height: 100%; width: 100%; border: 0px;'):
+                    pass
             with tag('div', klass='row'):
                 for d in DEVICES:
                     device = DEVICES[d]
