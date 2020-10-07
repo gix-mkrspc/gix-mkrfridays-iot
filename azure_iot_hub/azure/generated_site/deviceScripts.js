@@ -14,7 +14,7 @@ function invokeDevice(name, url) {
     ba.setBackground('success'); // set the alert to a success one
     if(msg){
         document.getElementById(`text_${name}`).value = '';
-        sendWebRequest("GET",`${url}&msg=${msg}`);
+        sendWebRequest("GET",`${url}?msg=${msg}`);
         ba.addH(3, `Success! The device "${name}" is being invoked with this message: ${msg}`); // create a heading 1 tag
     } else {
         sendWebRequest("GET",`${url}`);

@@ -6,6 +6,7 @@ import pickle
 doc, tag, text = Doc().tagtext()
 
 FILE_PATH = 'device_function_urls.csv'
+LIVESTREAM_URL = ''
 
 # HTML markup variables
 TITLE = "GIX IoT Hub"
@@ -81,6 +82,14 @@ with tag('html', lang="en"):
         with tag('h1'):
             text(TITLE)
         with tag('div', klass='container'):
+            with tag('div', klass='embed-responsive embed-responsive-16by9'):
+                with tag(
+                       'iframe',
+                       klass='embed-responsive-item',
+                       allow='camera; microphone; fullscreen; display-capture',
+                       src=LIVESTREAM_URL,
+                       style='height: 100%; width: 100%; border: 0px;'):
+                    pass
             with tag('div', klass='row'):
                 for d in DEVICES:
                     device = DEVICES[d]
