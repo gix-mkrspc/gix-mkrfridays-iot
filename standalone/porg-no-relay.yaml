@@ -43,3 +43,6 @@ binary_sensor:
 
   ota:
     password: !secret ota_pass
+
+# Enable Home Assistant API
+# api:
