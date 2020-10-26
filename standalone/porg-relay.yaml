@@ -30,3 +30,6 @@ logger:
 
 ota:
   password: !secret ota_pass
+
+# Enable Home Assistant API
+# api:

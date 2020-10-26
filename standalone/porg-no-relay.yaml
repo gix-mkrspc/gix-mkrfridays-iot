@@ -1,0 +1,48 @@
+esphome:
+    name: porg
+    platform: ESP8266
+    board: nodemcuv2
+    
+  web_server:
+    port: 80
+  
+  wifi:
+    ap:
+      ssid: !secret ap_ssid
+      password: !secret ap_pass
+
+  captive_portal:
+
+switch:
+  - platform: gpio
+    pin: D7
+    id: momentary_porg_squawk
+  - platform: template
+    name: "Porg Squawk"
+    icon: "mdi:bird"
+    turn_on_action:
+      - switch.turn_on: momentary_porg_squawk
+      - delay: 500ms
+      - switch.turn_off: momentary_porg_squawk
+
+binary_sensor:
+  - platform: gpio
+    pin:
+      number: D6
+      mode: INPUT_PULLUP
+    filters:
+      - invert:
+    id: porg_button
+    name: "Porg Button"
+    on_press:
+      then:
+        - switch.turn_on: momentary_porg_squawk
+        - logger.log: "on_press action invoked!"
+
+  logger:
+
+  ota:
+    password: !secret ota_pass
+
+# Enable Home Assistant API
+# api:
