@@ -49,6 +49,9 @@ ESPHome is the software and firmware flasher we’ll be using; it’s a “syste
       - [Install board into Arduino IDE](#install-board-into-arduino-ide-1)
       - [Finish board setup via python script](#finish-board-setup-via-python-script-1)
       - [Upload code to Arduino](#upload-code-to-arduino-1)
+- [Future Work](#future-work)
+  - [Current Limitations](#current-limitations)
+  - [Contributing](#contributing)
 
 
 # Local Control (via ESPHome)
@@ -369,3 +372,13 @@ If any of these steps fail please double check these instructions, open an issue
   <img src="./assets/arduino/8.png" height="400">  
 4. Plug the Arduino in. Compile and upload the sample by clicking the *checkmark* in the top left corner of the IDE.
 5. To use the serial monitor, ensure that your board's baud rate is set to **115200** or **1000000** baud.
+
+# Future Work
+
+## Current Limitations
+* This script cannot easily add devices to an existing deployment. To do so would require a user to do an entirely new deployment, setting up all infrastructure again. To remedy this, `kwarg`s could be added which focus solely on the required components (e.g. creating more azure functions and/or regenerating the dashboard).
+* Currently, this script is mainly tested on macOS and some parts may not work for Windows. This could be fixed through using things like the `Path` python module.
+* Setting up the MAX7219 LED display matrix is time-consuming and requires building of source from multiplle azure-iot-* libs. To see more info [start here](https://github.com/Azure/azure-iot-arduino#esp32) and then reference [this issue](https://github.com/Azure/azure-iot-arduino/issues/102).
+
+## Contributing
+There are multiple aspects of this project that can be forked and merged back in. Please feel free to do so and open up a PR!
